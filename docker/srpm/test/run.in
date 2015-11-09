@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+IMG_NAME=${DOCKER_ORG_NAME}/${PKG_NAME}-srpm-test
+docker build -t $IMG_NAME --no-cache . \
+    && docker run -t $IMG_NAME find /opt/danse
