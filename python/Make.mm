@@ -16,7 +16,7 @@ PROJECT = matter
 #--------------------------------------------------------------------------
 #
 
-BUILD_DIRS = python
+BUILD_DIRS = matter
 
 OTHER_DIRS = \
 

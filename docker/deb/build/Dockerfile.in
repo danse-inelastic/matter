@@ -1,0 +1,13 @@
+FROM ${DOCKER_ORG_NAME}/${PKG_NAME}-deb-deps
+
+MAINTAINER "Jiao Lin <jiao.lin@gmail.com>"
+
+RUN mkdir /work
+WORKDIR /work
+RUN git clone ${GITHUB_URL} src
+RUN mkdir build
+WORKDIR /work/build
+RUN cmake ../src -DCMAKE_INSTALL_PREFIX=/opt/danse -DDEPLOYMENT_PREFIX=/opt/danse
+RUN make package
+RUN mkdir DEB
+RUN mv *.deb DEB/
