@@ -16,7 +16,7 @@ from dsaw.model.Inventory import Inventory as InvBase
 
 
 # the data object
-from matter.Atom import Atom
+from ..Atom import Atom
 
 # dsaw.model helpers
 def __establishInventory__(self, inventory):

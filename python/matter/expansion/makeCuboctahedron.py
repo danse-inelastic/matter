@@ -18,8 +18,8 @@
 __id__ = "$Id: makeCuboctahedron.py 3624 2009-09-21 19:59:43Z farrowch $"
 
 from math import ceil
-from matter import Structure, Atom
-from matter.expansion.shapeUtils import findCenter
+from .. import Structure, Atom
+from .shapeUtils import findCenter
 
 def makeCuboctahedron(S, dist):
     """Make a cuboctahedron nanoparticle.
@@ -35,7 +35,7 @@ def makeCuboctahedron(S, dist):
     frac = S.lattice.fractional((dist, dist, dist))
     mno = map(ceil, 2*frac)
     # Make the supercell
-    from matter.expansion import supercell
+    from .supercell_mod import supercell
     newS = supercell(S, mno)
     lat = newS.lattice
 

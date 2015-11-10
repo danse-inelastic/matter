@@ -22,9 +22,9 @@ __id__ = "$Id: P_xyz.py 2825 2009-03-09 04:33:12Z juhas $"
 
 import sys
 
-from matter import Structure, Lattice, Atom
-from matter import StructureFormatError
-from matter.Parsers import StructureParser
+from .. import Structure, Lattice, Atom
+from .. import StructureFormatError
+from . import StructureParser
 
 class P_xyz(StructureParser):
     """Parser for standard XYZ structure format.
@@ -60,7 +60,6 @@ class P_xyz(StructureParser):
                 try:
                     latticeVecs = map(float, linefields[start+1])
                     assert len(latticeVecs)==9
-                    from matter.Lattice import Lattice
                     reshaped = [latticeVecs[0:3], latticeVecs[3:6], latticeVecs[6:9]]
                     stru.lattice = Lattice(base=reshaped) 
                     needsDescription = True
@@ -194,7 +193,7 @@ class TestCase(unittest.TestCase):
 
     def testWriter(self):
         p = getParser()
-        import matter
+        from danse.ins import matter
         a = 1.5
         lattice = matter.Lattice(2*a, 2*a, 2*a, 90,90,90)
         atoms = [matter.Atom('Ni'), matter.Atom('Ni', (0.5,0.5,0.5))]

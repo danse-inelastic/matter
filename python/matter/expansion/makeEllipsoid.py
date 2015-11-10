@@ -19,8 +19,8 @@ __id__ = "$Id: makeEllipsoid.py 3032 2009-04-08 19:15:37Z juhas $"
 
 from math import ceil
 from numpy import array
-from matter import Structure, Atom
-from matter.expansion.shapeUtils import findCenter
+from .. import Structure, Atom
+from .shapeUtils import findCenter
 
 def makeSphere(S, radius):
     """Create a spherical nanoparticle.
@@ -55,7 +55,7 @@ def makeEllipsoid(S, a, b=None, c=None):
     mno = map(ceil, 2*frac)
     mno = max(map(ceil, 2*frac))*array([1,1,1])
     # Make the supercell
-    from matter.expansion import supercell
+    from . import supercell
     newS = supercell(S, mno)
     lat = newS.lattice
 

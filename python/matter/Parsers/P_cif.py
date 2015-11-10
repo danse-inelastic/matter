@@ -18,9 +18,9 @@ import re
 import copy
 import numpy
 
-from matter import Structure, Lattice, Atom
-from matter import StructureFormatError
-from matter.Parsers import StructureParser
+from .. import Structure, Lattice, Atom
+from .. import StructureFormatError
+from . import StructureParser
 
 
 ##############################################################################
@@ -276,7 +276,7 @@ class P_cif(StructureParser):
         Raise StructureFormatError or IOError.
         """
         import CifFile
-        from StarFile import StarError
+        from CifFile.StarFile import StarError
         self.filename = filename
         try:
             fileurl = fixIfWindowsPath(filename)
@@ -414,8 +414,8 @@ class P_cif(StructureParser):
 
         No return value.
         """
-        from matter.SpaceGroups import IsSpaceGroupIdentifier
-        from matter.SpaceGroups import SpaceGroup, GetSpaceGroup
+        from ..SpaceGroups import IsSpaceGroupIdentifier
+        from ..SpaceGroups import SpaceGroup, GetSpaceGroup
         self.asymmetric_unit = list(self.stru)
         sym_synonyms = ('_space_group_symop_operation_xyz',
                         '_symmetry_equiv_pos_as_xyz')
@@ -473,7 +473,7 @@ class P_cif(StructureParser):
 
         No return value.
         """
-        from matter.SymmetryUtilities import ExpandAsymmetricUnit
+        from ..SymmetryUtilities import ExpandAsymmetricUnit
         # get reverse-ordered unique indices
         corepos = [a.xyz for a in self.stru]
         coreUijs = [a.U for a in self.stru]
@@ -623,7 +623,7 @@ def getSymOp(s):
 
     Return instance of SymOp.
     """
-    from matter.SpaceGroups import SymOp
+    from ..SpaceGroups import SymOp
     snoblanks = s.replace(' ','')
     eqlist = snoblanks.split(',')
     R = numpy.zeros((3,3), dtype=float)

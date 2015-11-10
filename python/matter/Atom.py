@@ -1,6 +1,6 @@
 from properties import *
 import numpy
-from matter.Lattice import Lattice
+from .Lattice import Lattice
 cartesian_lattice = Lattice()
        
 class AtomPropertyCurator(type):
@@ -15,7 +15,7 @@ class AtomPropertyCurator(type):
     """
 
     def __init__(AtomClass, name, bases, dict):
-        from matter import METACLASS_CTOR_NEEDS_TYPE
+        from . import METACLASS_CTOR_NEEDS_TYPE
         if METACLASS_CTOR_NEEDS_TYPE:
             type.__init__(AtomClass, name, bases, dict)
         else:

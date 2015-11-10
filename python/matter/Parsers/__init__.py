@@ -26,9 +26,9 @@ Content:
 __id__ = "$Id: __init__.py 3032 2009-04-08 19:15:37Z juhas $"
 
 
-from matter import StructureFormatError
-from matter.Parsers.structureparser import StructureParser
-from matter.Parsers.parser_index_mod import parser_index
+from .. import StructureFormatError
+from .structureparser import StructureParser
+from .parser_index_mod import parser_index
 
 def getParser(format):
     """Return Parser instance for a given structure format.
@@ -38,7 +38,7 @@ def getParser(format):
         emsg = "no parser for '%s' format" % format
         raise StructureFormatError(emsg)
     pmod = parser_index[format]['module']
-    import_cmd = 'from matter.Parsers import %s as pm' % pmod
+    import_cmd = 'from . import %s as pm' % pmod
     exec(import_cmd)
     return pm.getParser()
 

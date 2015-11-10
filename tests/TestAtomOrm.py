@@ -8,7 +8,7 @@ import unittest
 sys.path.insert(0,os.path.abspath('..'))
 print sys.path
 
-from matter import Atom
+from danse.ins.matter import Atom
 
 class TestCase( unittest.TestCase ):
     

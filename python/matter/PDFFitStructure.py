@@ -10,7 +10,7 @@
 
 __id__ = "$Id: pdffitstructure.py 3458 2009-07-08 06:38:31Z juhas $"
 
-from matter import Structure
+from danse.ins.matter import Structure
 
 ##############################################################################
 class PDFFitStructure(Structure):

@@ -8104,10 +8104,5 @@ def _buildSGLookupTable():
 # store a copy of the original space group list from PyMMLib
 mmLibSpaceGroupList = SpaceGroupList[:]
 
-# add additional space group representations obtained from sgtbx:
-from matter.sgtbxspacegroups import sgtbxSpaceGroupList
-SpaceGroupList = mmLibSpaceGroupList + sgtbxSpaceGroupList
-
-
 
 # End of file

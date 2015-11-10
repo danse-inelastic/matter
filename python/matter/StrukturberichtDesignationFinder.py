@@ -97,11 +97,12 @@ acos1_3 = math.acos(1./3)*180/math.pi
 
 
 
+from danse.ins import matter
+
 import unittest
 class TestCase(unittest.TestCase):
 
     def testA1(self):
-        import matter
         struct = matter.Structure(
             lattice = matter.Lattice(a=1,b=1,c=1,alpha=60,beta=60,gamma=60),
             sgid = 225,
@@ -112,7 +113,6 @@ class TestCase(unittest.TestCase):
 
 
     def testA2(self):
-        import matter
         struct = matter.Structure(
             lattice = matter.Lattice(a=1,b=1,c=1,alpha=acos1_3,beta=acos1_3,gamma=acos1_3),
             sgid = 229,
@@ -131,7 +131,6 @@ class TestCase(unittest.TestCase):
 
 
     def testAh(self):
-        import matter
         struct = matter.Structure(
             lattice = matter.Lattice(a=1,b=1,c=1,alpha=90,beta=90,gamma=90),
             sgid = 221,
@@ -142,7 +141,6 @@ class TestCase(unittest.TestCase):
 
 
     def testB1(self):
-        import matter
         struct = matter.Structure(
             lattice = matter.Lattice(a=1,b=1,c=1,alpha=60,beta=60,gamma=60),
             sgid = 225,
@@ -153,7 +151,6 @@ class TestCase(unittest.TestCase):
 
 
     def testB2(self):
-        import matter
         struct = matter.Structure(
             lattice = matter.Lattice(a=1,b=1,c=1,alpha=90,beta=90,gamma=90),
             sgid = 221,
@@ -164,7 +161,6 @@ class TestCase(unittest.TestCase):
 
 
     def testMethodInStructureClass(self):
-        import matter
         struct = matter.Structure(
             lattice = matter.Lattice(a=1,b=1,c=1,alpha=60,beta=60,gamma=60),
             sgid = 225,

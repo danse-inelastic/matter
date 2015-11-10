@@ -12,7 +12,7 @@ __id__ = "$Id: supercell_mod.py 3032 2009-04-08 19:15:37Z juhas $"
 
 
 import numpy
-from matter import Structure, Atom
+from .. import Structure, Atom
 
 
 def supercell(S, mno):
@@ -22,7 +22,7 @@ def supercell(S, mno):
     divided by corresponding multiplier.  New atoms are grouped with
     their source in the original cell.
 
-    S   -- an instance of Structure from matter.
+    S   -- an instance of Structure from matter
     mno -- sequence of 3 integers for cell multipliers along
            the a, b and c axes.
 
@@ -62,7 +62,7 @@ def supercell(S, mno):
     for a in S:
         for ijk in ijklist:
             adup = Atom(a)
-            adup.xyz = (a.xyz + ijk)/mnofloats
+            adup.xyz = (numpy.array(a.xyz) + ijk)/mnofloats
             newAtoms.append(adup)
     # newS can own references in newAtoms, no need to make copies
     newS.__setslice__(0, len(newS), newAtoms, copy=False)

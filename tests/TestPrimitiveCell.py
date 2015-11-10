@@ -1,7 +1,7 @@
 import unittest
-from matter.Atom import Atom
-from matter.Lattice import Lattice
-from matter.Structure import Structure
+from danse.ins.matter.Atom import Atom
+from danse.ins.matter.Lattice import Lattice
+from danse.ins.matter.Structure import Structure
 class TestCase(unittest.TestCase):
 
     def test1(self):

@@ -22,7 +22,7 @@ tests_dir = os.path.dirname(os.path.abspath(thisfile))
 testdata_dir = os.path.join(tests_dir, 'testdata')
 
 sys.path.insert(0,os.path.abspath('..'))# this should put the source code first on the path
-from matter.Structure import Structure
+from danse.ins.matter.Structure import Structure
 
 ##############################################################################
 class TestStructure(unittest.TestCase):

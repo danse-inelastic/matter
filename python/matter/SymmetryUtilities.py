@@ -23,7 +23,7 @@ import sys
 import re
 import numpy
 
-from matter.StructureErrors import SymmetryError
+from .StructureErrors import SymmetryError
 
 # Constants:
 
@@ -898,7 +898,7 @@ class SymmetryConstraints:
 
 # basic demonstration
 if __name__ == "__main__":
-    from matter.SpaceGroups import sg100
+    from .SpaceGroups import sg100
     site = [.125, .625, .13]
     Uij = numpy.array([[1,2,3],[2,4,5],[3,5,6]], dtype=float)
     g = GeneratorSite(sg100, site, Uij=Uij)

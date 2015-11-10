@@ -16,9 +16,9 @@ import sys
 import unittest
 
 import numpy
-from matter.SpaceGroups import GetSpaceGroup
-from matter.SymmetryUtilities import *
-from matter.SymmetryUtilities import _Position2Tuple
+from danse.ins.matter.SpaceGroups import GetSpaceGroup
+from danse.ins.matter.SymmetryUtilities import *
+from danse.ins.matter.SymmetryUtilities import _Position2Tuple
 
 # useful variables
 thisfile = locals().get('__file__', 'TestSymmetryUtilities.py')

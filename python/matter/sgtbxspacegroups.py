@@ -18,8 +18,8 @@ sgtbxSpaceGroupList -- list of space group instances defined in this module
 __id__ = "$Id: sgtbxspacegroups.py 3519 2009-08-19 18:18:45Z juhas $"
 
 
-from matter.SpaceGroups import SpaceGroup, SymOp
-from matter.SpaceGroups import \
+from .SpaceGroups import SpaceGroup, SymOp
+from .SpaceGroups import \
         Rot_X_Y_Z, Rot_X_mY_mZ, Rot_mX_Y_mZ, Rot_mX_mY_Z, Rot_mX_Y_Z, \
         Rot_X_mY_Z, Rot_X_Y_mZ, Rot_mX_mY_mZ, \
         Tr_0_0_0, Tr_12_0_0, Tr_0_12_12, Tr_12_12_12, Tr_12_0_12, \
@@ -4958,5 +4958,13 @@ sgtbxSpaceGroupList = [
         sg5068, sg6068, sg7068, sg1072, sg2072, sg1073, sg1074, sg2074,
         sg3074, sg4074, sg5074,
 ]
+
+
+# add additional space group representations obtained from sgtbx:
+# the following code was in SpaceGroups.py
+# from .sgtbxspacegroups import sgtbxSpaceGroupList
+# SpaceGroupList = mmLibSpaceGroupList + sgtbxSpaceGroupList
+from . import SpaceGroups
+SpaceGroups.SpaceGroupList = SpaceGroups.mmLibSpaceGroupList + sgtbxSpaceGroupList
 
 # End of file

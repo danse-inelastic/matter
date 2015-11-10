@@ -7,9 +7,9 @@ import unittest
 
 sys.path.insert(0,os.path.abspath('..'))
 
-from matter.orm.Structure import Structure
-from matter.orm.Atom import Atom
-from matter.orm.Lattice import  Lattice
+from danse.ins.matter.orm.Structure import Structure
+from danse.ins.matter.orm.Atom import Atom
+from danse.ins.matter.orm.Lattice import  Lattice
 
 class TestCase( unittest.TestCase ):
     

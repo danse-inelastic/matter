@@ -8,7 +8,7 @@ import unittest
 sys.path.insert(0,os.path.abspath('..'))
 print sys.path
 
-from matter import Atom
+from danse.ins.matter import Atom
 
 class TestCase( unittest.TestCase ):
     
@@ -22,7 +22,7 @@ class TestCase( unittest.TestCase ):
     
     def test_xyz(self):
         "Atom: xyz cartesian attribute"
-        from matter import Lattice
+        from danse.ins.matter import Lattice
         C = Atom( 'C', [0.1, 0.2, 0.3], lattice = Lattice(2,2,2,90,90,90))
         print "fractional pos=%s" % C.xyz
         print "cartesian pos=%s" % C.xyz_cartn

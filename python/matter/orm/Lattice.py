@@ -16,7 +16,7 @@ from dsaw.model.Inventory import Inventory as InvBase
 
 
 # data object
-from matter.Lattice import Lattice
+from ..Lattice import Lattice
 
 
 # dsaw.model inventory

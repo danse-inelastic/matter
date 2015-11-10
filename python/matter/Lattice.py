@@ -11,7 +11,7 @@ import math
 import numpy
 import numpy.linalg as numalg
 from StructureErrors import LatticeError
-from matter.crystalUtils.MonkhorstPack import MonkhorstPack
+from .crystalUtils.MonkhorstPack import MonkhorstPack
 
 # helper functions
 

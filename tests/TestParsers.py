@@ -14,9 +14,9 @@ import unittest
 import os
 import re
 
-from matter import Structure, StructureFormatError
-from matter import Lattice
-from matter import Atom
+from danse.ins.matter import Structure, StructureFormatError
+from danse.ins.matter import Lattice
+from danse.ins.matter import Atom
 
 # useful variables
 thisfile = locals().get('__file__', 'TestParsers.py')
@@ -102,7 +102,7 @@ class TestP_xyz(unittest.TestCase):
         self.stru4 = Structure( [ at1, at2, at3, at4], 
                         lattice=Lattice(4.05, 4.05, 4.05, 90, 90, 90),
                         sgid = 225 )
-        from matter.expansion import supercell
+        from danse.ins.matter.expansion import supercell
         al_333 = supercell(self.stru4, (3, 3, 3))
         s1 = al_333.writeStr(self.format)
         #print s1

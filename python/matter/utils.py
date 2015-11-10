@@ -29,7 +29,7 @@ def getModules( package ):
         if entry.find( "__init__.py" ) != -1: continue
         modulename, ext = os.path.splitext( entry )
         if ext not in [".py", '.pyc'] : continue
-        exec "import %s.%s as m" % (packagename, modulename)
+        exec "from %s import %s as m" % (packagename, modulename)
         rt.append( m )
         continue
     return rt

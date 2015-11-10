@@ -26,9 +26,9 @@ import sys
 import numpy
 from numpy import pi
 
-from matter import Structure, Lattice, Atom
-from matter import StructureFormatError
-from matter.Parsers import StructureParser
+from .. import Structure, Lattice, Atom
+from .. import StructureFormatError
+from . import StructureParser
 
 class P_pdb(StructureParser):
     """Simple parser for PDB format.

@@ -702,17 +702,17 @@ class Structure(list):
 
     def _get_spaceGroup(self):
         if not self._sg:
-            from matter.SpaceGroups import GetSpaceGroup
+            from .SpaceGroups import GetSpaceGroup
             self._sg = GetSpaceGroup(self._sgid)
         return self._sg
 
     def _set_spaceGroup(self, item):
-        from matter.SpaceGroups import SpaceGroup
+        from .SpaceGroups import SpaceGroup
         if isinstance(item, SpaceGroup):
             self._sg = item
             self._sgid = item.number
         else:
-            from matter.SpaceGroups import GetSpaceGroup
+            from .SpaceGroups import GetSpaceGroup
             self._sg = GetSpaceGroup(item)
             self._sgid = item
 

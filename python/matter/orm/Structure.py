@@ -19,7 +19,7 @@ from dsaw.model.Inventory import Inventory as InvBase
 from Atom import Atom
 from Lattice import Lattice
 from UnitCell import UnitCell
-from matter.Structure import Structure
+from ..Structure import Structure
 
 
 # inventory

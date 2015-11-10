@@ -16,7 +16,7 @@ from dsaw.model.Inventory import Inventory as InvBase
 
 
 # data object
-from matter.UnitCell import UnitCell
+from ..UnitCell import UnitCell
 
 
 # dsaw.model inventory

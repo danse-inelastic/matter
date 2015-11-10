@@ -10,13 +10,13 @@ decorators/wrappers instead for a while.
 #import MMTK.ForceFields
 import copy, sys, types
 #from Atom import Atom
-import matter
+from danse.ins import matter
 
 #
 # Atoms
 #
 def A(name, index, type = None):
-    from matter.Atom import Atom
+    from .Atom import Atom
     #hack--sometimes 'name' contains element and sometimes 'type'
     if len(name)<3:
         return Atom(name)
@@ -32,7 +32,7 @@ def A(name, index, type = None):
 #        self.type = type
 #
 #    def make(self, info, conf = None):
-#        from matter.Atom import Atom
+#        from .Atom import Atom
 #        atom =  Atom(name = self.name)
 #        self.assignIndex(atom, info, conf)
 #        return atom
@@ -45,12 +45,12 @@ def A(name, index, type = None):
             
 #MMTK wrappers
 def OrthorhombicPeriodicUniverse(vecLengths):
-    from matter.Lattice import Lattice
+    from .Lattice import Lattice
     return Lattice(base=[[vecLengths[0],0,0], [0,vecLengths[1],0],
                                          [0,0,vecLengths[2]]])
     
 def ParallelepipedicPeriodicUniverse(vecs):
-    from matter.Lattice import Lattice
+    from .Lattice import Lattice
     return Lattice(base=vecs)
     
 def Vector(a,b,c):
@@ -108,7 +108,7 @@ class G(Composite):
 #    _class = MMTK.Molecule
 
 def c(*args):
-    from matter.Structure import Structure
+    from .Structure import Structure
     return Structure(lattice=args[0], atoms=args[1])
 
 #class C(Composite):

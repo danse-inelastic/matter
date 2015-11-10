@@ -20,10 +20,10 @@ import sys
 import re
 import numpy
 
-from matter import Structure, Lattice, Atom
-from matter import StructureFormatError
-from matter.Parsers import StructureParser
-from matter.utils import isfloat
+from danse.ins.matter import Structure, Lattice, Atom
+from danse.ins.matter import StructureFormatError
+from . import StructureParser
+from danse.ins.matter.utils import isfloat
 
 
 ##############################################################################

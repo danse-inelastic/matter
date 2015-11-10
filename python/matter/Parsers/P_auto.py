@@ -13,9 +13,9 @@ This Parser does not provide the the toLines() method.
 __id__ = "$Id: P_auto.py 2825 2009-03-09 04:33:12Z juhas $"
 
 #from matter import Structure, Lattice, Atom
-from matter import StructureFormatError
-from matter.Parsers import StructureParser
-from matter.Parsers import parser_index
+from .. import StructureFormatError
+from . import StructureParser
+from . import parser_index
 
 class P_auto(StructureParser):
     """Parser with automatic detection of structure format.
@@ -34,7 +34,7 @@ class P_auto(StructureParser):
         This only works when self.filename has a known extension.
         """
         import os.path
-        from matter.Parsers import inputFormats
+        from . import inputFormats
         ofmts = [fmt for fmt in inputFormats() if fmt != 'auto']
         if not self.filename:   return ofmts
         # filename is defined here
@@ -56,7 +56,7 @@ class P_auto(StructureParser):
 
         Return Structure instance, or raise StructureFormatError.
         """
-        from matter.Parsers import getParser
+        from . import getParser
         ofmts = self.getOrderedFormats()
         stru = None
         # try all parsers in sequence

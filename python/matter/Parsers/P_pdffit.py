@@ -13,10 +13,10 @@ __id__ = "$Id: P_pdffit.py 2825 2009-03-09 04:33:12Z juhas $"
 import sys
 import numpy
 
-from matter import Lattice, Atom
-from matter.PDFFitStructure import PDFFitStructure
-from matter import StructureFormatError
-from matter.Parsers import StructureParser
+from danse.ins.matter import Lattice, Atom
+from danse.ins.matter.PDFFitStructure import PDFFitStructure
+from danse.ins.matter import StructureFormatError
+from . import StructureParser
 
 class P_pdffit(StructureParser):
     """Parser for PDFfit structure format.

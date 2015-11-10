@@ -16,7 +16,7 @@ from dsaw.model.Inventory import Inventory as InvBase
 
 
 # data object
-from matter.Structure import Structure
+from ..Structure import Structure
 
 
 # inventory

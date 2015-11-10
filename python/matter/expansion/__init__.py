@@ -16,6 +16,6 @@ __id__ = "$Id: __init__.py 3032 2009-04-08 19:15:37Z juhas $"
 
 # Import below whatever should be available at package namespace.
 
-from matter.expansion.supercell_mod import supercell
+from .supercell_mod import supercell
 
 # End of file

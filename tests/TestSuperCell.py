@@ -14,10 +14,10 @@ thisfile = locals().get('__file__', 'file.py')
 tests_dir = os.path.dirname(os.path.abspath(thisfile))
 testdata_dir = os.path.join(tests_dir, 'testdata')
 
-from matter import Structure
-from matter.Lattice import Lattice
-from matter.Atom import  Atom
-from matter.expansion import supercell
+from danse.ins.matter import Structure
+from danse.ins.matter.Lattice import Lattice
+from danse.ins.matter.Atom import  Atom
+from danse.ins.matter.expansion import supercell
 
 
 ##############################################################################

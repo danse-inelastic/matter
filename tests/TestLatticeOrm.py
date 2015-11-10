@@ -7,7 +7,7 @@ import unittest
 
 sys.path.insert(0,os.path.abspath('..'))
 
-from matter.orm.Lattice import Lattice
+from danse.ins.matter.orm.Lattice import Lattice
 
 class TestCase( unittest.TestCase ):
     
