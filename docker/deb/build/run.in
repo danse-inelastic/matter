@@ -1,5 +1,0 @@
-#!/usr/bin/env bash
-
-IMG=${DOCKER_ORG_NAME}/${PKG_NAME}-deb
-docker build -t $IMG --no-cache .
-docker run -v $PWD:/OUTPUT $IMG mv /work/build/DEB /OUTPUT
