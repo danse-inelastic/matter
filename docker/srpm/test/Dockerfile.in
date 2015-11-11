@@ -1,6 +1,0 @@
-FROM ${DOCKER_ORG_NAME}/${PKG_NAME}-srpm-deps
-
-MAINTAINER "Jiao Lin <jiao.lin@gmail.com>"
-
-RUN rpmbuild --rebuild ${GITHUB_URL}/releases/download/v${VERSION}/${PKG_NAME}-${VERSION}-${CPACK_PACKAGE_RELEASE}.src.rpm
-RUN rpm -i ~/rpmbuild/RPMS/x86_64/${PKG_NAME}-${VERSION}-${CPACK_PACKAGE_RELEASE}.x86_64.rpm

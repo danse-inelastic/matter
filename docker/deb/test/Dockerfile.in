@@ -1,7 +1,0 @@
-FROM ${DOCKER_ORG_NAME}/${PKG_NAME}-deb-deps
-
-MAINTAINER "Jiao Lin <jiao.lin@gmail.com>"
-
-RUN apt-get install wget
-RUN wget ${GITHUB_URL}/releases/download/v${VERSION}/${PKG_NAME}-${VERSION}-${CPACK_PACKAGE_RELEASE}.x86_64.deb
-RUN dpkg -i ${PKG_NAME}-${VERSION}-${CPACK_PACKAGE_RELEASE}.x86_64.deb

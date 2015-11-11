@@ -13,6 +13,16 @@ set(GITHUB_URL "https://github.com/danse-inelastic/matter")
 # extra dependencies that cannot be put into CPACK
 # PyCifRW
 
+# packaging with the help of docker and packagecloud
+# package repository at packagecloud
+set (PKGCLOUD_USERNAME "danse")
+set (PKGCLOUD_REPO "ins")
+# dependencies
+set (DOCKER_PKGING_DEPS_DEB "python-numpy danse.ins")
+set (DOCKER_PKGING_DEPS_RPM "numpy danse.ins")
+set (DOCKER_PKGING_TEST_SRPM ". /opt/danse/bin/setup-danse.sh && python -c 'import danse.ins.matter as p; print p'")
+set (DOCKER_PKGING_TEST_RPM ${DOCKER_PKGING_TEST_SRPM})
+set (DOCKER_PKGING_TEST_DEB ${DOCKER_PKGING_TEST_SRPM})
 
 # variables
 set (PYBINDING_NAME "${PROJECT_NAME}module")
@@ -114,4 +124,12 @@ add_custom_target(
   )
 
 # docker folder for build and test packaging artifacts
+execute_process(
+  COMMAND rm -rf docker
+  WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+  )
+execute_process(
+  COMMAND git clone https://github.com/danse-inelastic/packaging-use-docker docker
+  WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+  )
 add_subdirectory(docker)
