@@ -17,6 +17,9 @@ set(GITHUB_URL "https://github.com/danse-inelastic/matter")
 # package repository at packagecloud
 set (PKGCLOUD_USERNAME "danse")
 set (PKGCLOUD_REPO "ins")
+# debian
+set(DOCKER_PKGING_DEB_DIST_NAME "ubuntu")
+set(DOCKER_PKGING_DEB_DIST_VERSION "12.04")
 # dependencies
 set (DOCKER_PKGING_DEPS_DEB "python-numpy danse.ins")
 set (DOCKER_PKGING_DEPS_RPM "numpy danse.ins")
