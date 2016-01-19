@@ -7,6 +7,7 @@ License:        @CPACK_PACKAGE_LICENSE@
 Group:          @CPACK_PACKAGE_APP_GROUP@
 Source:         @CPACK_PACKAGE_NAME@-@CPACK_PACKAGE_VERSION@.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
+BuildRequires:  git
 BuildRequires:  gcc-c++
 BuildRequires:	cmake > 2.6
 BuildRequires:	make
