@@ -9,6 +9,7 @@ set(SUMMARY "matter structure operations etc")
 set(LICENSE "BSD")
 set(RPM_APP_GROUP "Development/Tools")
 set(GITHUB_URL "https://github.com/danse-inelastic/matter")
+set (HOMEPAGE ${GITHUB_URL})
 
 # extra dependencies that cannot be put into CPACK
 # PyCifRW
@@ -26,6 +27,8 @@ set (DOCKER_PKGING_DEPS_RPM "numpy danse.ins")
 set (DOCKER_PKGING_TEST_SRPM ". /opt/danse/bin/setup-danse.sh && python -c 'import danse.ins.matter as p; print p'")
 set (DOCKER_PKGING_TEST_RPM ${DOCKER_PKGING_TEST_SRPM})
 set (DOCKER_PKGING_TEST_DEB ${DOCKER_PKGING_TEST_SRPM})
+set (CONDA_PKGING_BUILD_DEPS "numpy danse.ins")
+set (CONDA_PKGING_RUN_DEPS "numpy danse.ins")
 
 # variables
 set (PYBINDING_NAME "${PROJECT_NAME}module")
@@ -38,17 +41,23 @@ set (PARENT_RELEASE "0")
 set (PKG_NAME "${PARENT_PY_PKG}.${PROJECT_NAME}")
 
 
+# get cmake_utils
+IF(EXISTS "cmake_utils/")
+  execute_process(
+    COMMAND git pull
+    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/cmake_utils
+    )
+ELSE(EXISTS "cmake_utils/")
+  execute_process(
+    COMMAND git clone https://github.com/danse-inelastic/cmake_utils
+    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+    )
+ENDIF(EXISTS "cmake_utils/")
+set(CMAKE_MODULE_PATH ${PROJECT_BINARY_DIR}/cmake_utils)
+
 # lib64
-get_property(LIB64 GLOBAL PROPERTY FIND_LIBRARY_USE_LIB64_PATHS)
-if ("${LIB64}" STREQUAL "TRUE")
-    set(LIBSUFFIX 64)
-else()
-    set(LIBSUFFIX "")
-endif()
-set(INSTALL_LIB_DIR
-  lib${LIBSUFFIX} CACHE PATH "Installation directory for libraries")
-# message( STATUS "Install lib dir: ${INSTALL_LIB_DIR}")
-mark_as_advanced(INSTALL_LIB_DIR)
+include(System)
+
 
 #list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}")
 
@@ -126,13 +135,8 @@ add_custom_target(
   DEPENDS ${SRC_RPM}
   )
 
-# docker folder for build and test packaging artifacts
-execute_process(
-  COMMAND rm -rf docker
-  WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-  )
-execute_process(
-  COMMAND git clone https://github.com/danse-inelastic/packaging-use-docker docker
-  WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-  )
-add_subdirectory(docker)
+# folders for build and test packaging artifacts
+# deb/rpm
+include(docker)
+# conda
+include(conda)
