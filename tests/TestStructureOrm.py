@@ -2,22 +2,22 @@
 
 
 
-import sys,os
+import sys, os
 import unittest
 
-sys.path.insert(0,os.path.abspath('..'))
+sys.path.insert(0, os.path.abspath('..'))
 
 from danse.ins.matter.orm.Structure import Structure
 from danse.ins.matter.orm.Atom import Atom
-from danse.ins.matter.orm.Lattice import  Lattice
+from danse.ins.matter.orm.Lattice import Lattice
 
-class TestCase( unittest.TestCase ):
+class TestCase(unittest.TestCase):
     
 
     def test_dsaworm(self):
         'Structure: dsaw orm'
-        Fe57 = Atom( 'Fe', mass=57 )
-        Al = Atom( 'Al' )
+        Fe57 = Atom('Fe', mass=57)
+        Al = Atom('Al')
         atoms = [Fe57, Al]
         
         lattice = Lattice(a=1, b=2, c=3, alpha=89, beta=91, gamma=92)
@@ -36,12 +36,12 @@ class TestCase( unittest.TestCase ):
             self.assertEqual(getattr(struct_loaded, prop), getattr(struct, prop))
             continue
 
-        props = ['a','b','c', 'alpha', 'beta', 'gamma']
+        props = ['a', 'b', 'c', 'alpha', 'beta', 'gamma']
         for prop in props:
             self.assertEqual(getattr(struct_loaded.lattice, prop), getattr(struct.lattice, prop))
             continue
 
-        self.assertEqual( len(struct_loaded), 2 )
+        self.assertEqual(len(struct_loaded), 2)
         for atom in struct_loaded:
             self.assertEqual(atom.__class__, Atom)
         return
@@ -62,7 +62,7 @@ class TestCase( unittest.TestCase ):
 
     def _dbManager(self):
         from dsaw.db import connect
-        db = connect(db ='postgres:///test')
+        db = connect(db='postgres:///test')
         db.autocommit(True)
         return db
 

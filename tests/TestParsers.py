@@ -1,3 +1,5 @@
+from __future__ import print_function
+
 ##############################################################################
 #
 # See AUTHORS.txt for a list of people who contributed.
@@ -55,7 +57,7 @@ class TestP_xyz(unittest.TestCase):
         stru = self.stru
         #stru.read(datafile('bucky.xyz'), self.format)
         stru.read(datafile('si64.init.xyz'), self.format)
-        print stru.lattice
+        print(stru.lattice)
         s_els = [a.symbol for a in stru]
         #self.assertEqual(stru.description, 'bucky-ball')
         #self.assertEqual(s_els, 60*['C'])
@@ -72,13 +74,13 @@ class TestP_xyz(unittest.TestCase):
         """check exceptions when reading invalid xyz file"""
         stru = self.stru
         self.assertRaises(StructureFormatError, stru.read,
-                datafile('bucky-bad1.xyz'), self.format )
+                datafile('bucky-bad1.xyz'), self.format)
         self.assertRaises(StructureFormatError, stru.read,
-                datafile('bucky-bad2.xyz'), self.format )
+                datafile('bucky-bad2.xyz'), self.format)
         self.assertRaises(StructureFormatError, stru.read,
-                datafile('bucky-plain.xyz'), self.format )
+                datafile('bucky-plain.xyz'), self.format)
         self.assertRaises(StructureFormatError, stru.read,
-                datafile('hexagon-raw.xy'), self.format )
+                datafile('hexagon-raw.xy'), self.format)
 
     def test_writeStr_xyz(self):
         """check string representation of normal xyz file"""
@@ -91,7 +93,7 @@ class TestP_xyz(unittest.TestCase):
         ]
         s1 = stru.writeStr(self.format)
         s1 = re.sub('[ \t]+', ' ', s1)
-        s0 = "2\n%s\nH 1 2 3\nCl 3 4 3\n" % stru.description
+        s0 = "2\n{0!s}\nH 1 2 3\nCl 3 4 3\n".format(stru.description)
         self.assertEqual(s1, s0)
         
     def test_writeStr_xyz_Supercell(self):
@@ -99,15 +101,15 @@ class TestP_xyz(unittest.TestCase):
         at2 = Atom('Al', [0.0, 0.5, 0.5])
         at3 = Atom('Al', [0.5, 0.0, 0.5])
         at4 = Atom('Al', [0.5, 0.5, 0.0])
-        self.stru4 = Structure( [ at1, at2, at3, at4], 
+        self.stru4 = Structure([at1, at2, at3, at4], 
                         lattice=Lattice(4.05, 4.05, 4.05, 90, 90, 90),
-                        sgid = 225 )
+                        sgid=225)
         from danse.ins.matter.expansion import supercell
         al_333 = supercell(self.stru4, (3, 3, 3))
         s1 = al_333.writeStr(self.format)
-        #print s1
+        #print(s1)
 #        s1 = re.sub('[ \t]+', ' ', s1)
-#        s0 = "2\n%s\nH 1 2 3\nCl 3 4 3\n" % stru.description
+#        s0 = "2\n{0!s}\nH 1 2 3\nCl 3 4 3\n".format(stru.description)
 #        self.assertEqual(s1, s0)
 
     def test_write_xyz(self):
@@ -122,7 +124,7 @@ class TestP_xyz(unittest.TestCase):
         stru.write(self.tmpname, self.format)
         f_s = open(self.tmpname).read()
         f_s = re.sub('[ \t]+', ' ', f_s)
-        s_s = "2\n%s\nH 1 2 3\nCl 3 4 3\n" % stru.description
+        s_s = "2\n{0!s}\nH 1 2 3\nCl 3 4 3\n".format(stru.description)
         self.assertEqual(f_s, s_s)
 
 # End of TestP_xyz
@@ -162,7 +164,7 @@ class TestP_forces(unittest.TestCase):
 #        stru.write(self.tmpname, self.format)
 #        f_s = open(self.tmpname).read()
 #        f_s = re.sub('[ \t]+', ' ', f_s)
-#        s_s = "2\n%s\nH 1 2 3\nCl 3 4 3\n" % stru.description
+#        s_s = "2\n{0!s}\nH 1 2 3\nCl 3 4 3\n".format(stru.description)
 #        self.assertEqual(f_s, s_s)
 
 # End of TestP_forces
@@ -180,7 +182,7 @@ class TestP_rawxyz(unittest.TestCase):
         stru = self.stru
         stru.read(datafile('bucky-plain.xyz'), self.format)
         s_els = [a.symbol for a in stru]
-        #print 'description',stru.description
+        #print('description',stru.description)
         self.assertEqual(stru.description, 'C60 in Lattice()')
         self.assertEqual(s_els, 60*['C'])
 
@@ -196,7 +198,7 @@ class TestP_rawxyz(unittest.TestCase):
         stru.read(datafile('bucky-raw.xyz'), self.format)
         s_els = [a.symbol for a in stru]
         #stru.description = stru.generateDescription()
-        #print 'description',stru.description
+        #print('description',stru.description)
         self.assertEqual(stru.description, '60 in Lattice()')
         self.assertEqual(s_els, 60*[''])
         stru.read(datafile('hexagon-raw.xyz'), self.format)
@@ -217,7 +219,7 @@ class TestP_rawxyz(unittest.TestCase):
         stru.description = "test of writeStr"
         stru.lattice = Lattice(1.0, 2.0, 3.0, 90.0, 90.0, 90.0)
         # plain version
-        stru[:] = [ Atom('H', [1., 1., 1.]) ]
+        stru[:] = [Atom('H', [1., 1., 1.])]
         s1 = stru.writeStr(self.format)
         s1 = re.sub('[ \t]+', ' ', s1)
         s0 = "H 1 2 3\n"
@@ -249,13 +251,13 @@ class TestP_pdb(unittest.TestCase):
         """check reading of arginine PDB file"""
         stru = self.stru
         stru.read(datafile('arginine.pdb'), self.format)
-        f_els = [ "N", "C", "C", "O", "C", "C", "C", "N", "C", "N", "N", "H",
+        f_els = ["N", "C", "C", "O", "C", "C", "C", "N", "C", "N", "N", "H",
             "H", "H", "H", "H", "H", "H", "H", "H", "H", "H", "H", "H", "H",
-            "O", "H" ]
+            "O", "H"]
         s_els = [a.symbol for a in stru]
         self.assertEqual(s_els, f_els)
-        s_lat = [ stru.lattice.a, stru.lattice.b, stru.lattice.c,
-            stru.lattice.alpha, stru.lattice.beta, stru.lattice.gamma ]
+        s_lat = [stru.lattice.a, stru.lattice.b, stru.lattice.c,
+            stru.lattice.alpha, stru.lattice.beta, stru.lattice.gamma]
         f_lat = [1.0, 1.0, 1.0, 90.0, 90.0, 90.0]
         self.assertEqual(s_lat, f_lat)
         a0 = stru[0]
@@ -265,28 +267,28 @@ class TestP_pdb(unittest.TestCase):
         """check conversion to PDB file format"""
         stru = self.stru
         stru.read(datafile('CdSe_bulk.stru'), 'pdffit')
-        #print stru.description
+        #print(stru.description)
         s = stru.writeStr(self.format)
         # all lines should be 80 characters long
-        linelens = [ len(l) for l in s.split('\n') if l != "" ]
+        linelens = [len(l) for l in s.split('\n') if l != ""]
         self.assertEqual(linelens, len(linelens)*[80])
         # now clean and re-read structure
         stru = Structure()
         stru.readStr(s, self.format)
-        #print stru.description
+        #print(stru.description)
         s_els = [a.symbol for a in stru]
         f_els = ['Cd', 'Cd', 'Se', 'Se']
         self.assertEqual(s_els, f_els)
-        s_lat = [ stru.lattice.a, stru.lattice.b, stru.lattice.c,
-            stru.lattice.alpha, stru.lattice.beta, stru.lattice.gamma ]
-        f_lat = [ 4.235204,  4.235204,  6.906027, 90.0, 90.0, 120.0 ]
+        s_lat = [stru.lattice.a, stru.lattice.b, stru.lattice.c,
+            stru.lattice.alpha, stru.lattice.beta, stru.lattice.gamma]
+        f_lat = [4.235204,  4.235204,  6.906027, 90.0, 90.0, 120.0]
         self.assertListAlmostEqual(s_lat, f_lat)
         a0 = stru[0]
-        s_Uii = [ a0.U[i,i] for i in range(3) ]
-        f_Uii = [ 0.01303035, 0.01303035, 0.01401959 ]
+        s_Uii = [a0.U[i, i] for i in range(3)]
+        f_Uii = [0.01303035, 0.01303035, 0.01401959]
         self.assertListAlmostEqual(s_Uii, f_Uii)
-        s_sigUii = [ a0.sigU[i,i] for i in range(3) ]
-        f_sigUii = [ 0.00011127, 0.00011127, 0.00019575 ]
+        s_sigUii = [a0.sigU[i, i] for i in range(3)]
+        f_sigUii = [0.00011127, 0.00011127, 0.00019575]
         self.assertListAlmostEqual(s_sigUii, f_sigUii)
         s_title = stru.description
         f_title = "Cell structure file of CdSe #186"
@@ -314,12 +316,12 @@ class TestP_xcfg(unittest.TestCase):
         """check reading of BubbleRaft XCFG file"""
         stru = self.stru
         stru.read(datafile('BubbleRaftShort.xcfg'), self.format)
-        f_els = 500* [ "Ar" ]
+        f_els = 500* ["Ar"]
         s_els = [a.symbol for a in stru]
         self.assertEqual(s_els, f_els)
         self.assertAlmostEqual(stru.distance(82, 357), 47.5627, 3)
-        s_lat = [ stru.lattice.a, stru.lattice.b, stru.lattice.c,
-            stru.lattice.alpha, stru.lattice.beta, stru.lattice.gamma ]
+        s_lat = [stru.lattice.a, stru.lattice.b, stru.lattice.c,
+            stru.lattice.alpha, stru.lattice.beta, stru.lattice.gamma]
         f_lat = [127.5, 119.5, 3.0, 90.0, 90.0, 90.0]
         self.assertListAlmostEqual(s_lat, f_lat)
 
@@ -333,13 +335,13 @@ class TestP_xcfg(unittest.TestCase):
         s_els = [a.symbol for a in stru]
         f_els = ['Cd', 'Cd', 'Se', 'Se']
         self.assertEqual(s_els, f_els)
-        s_lat = [ stru.lattice.a, stru.lattice.b, stru.lattice.c,
-            stru.lattice.alpha, stru.lattice.beta, stru.lattice.gamma ]
-        f_lat = [ 4.235204,  4.235204,  6.906027, 90.0, 90.0, 120.0 ]
+        s_lat = [stru.lattice.a, stru.lattice.b, stru.lattice.c,
+            stru.lattice.alpha, stru.lattice.beta, stru.lattice.gamma]
+        f_lat = [4.235204,  4.235204,  6.906027, 90.0, 90.0, 120.0]
         self.assertListAlmostEqual(s_lat, f_lat)
         a0 = stru[0]
-        s_Uii = [ a0.U[i,i] for i in range(3) ]
-        f_Uii = [ 0.01303035, 0.01303035, 0.01401959 ]
+        s_Uii = [a0.U[i, i] for i in range(3)]
+        f_Uii = [0.01303035, 0.01303035, 0.01401959]
         self.assertListAlmostEqual(s_Uii, f_Uii)
 
 # End of TestP_xcfg

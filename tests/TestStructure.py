@@ -1,3 +1,5 @@
+from __future__ import print_function
+
 ##############################################################################
 #
 # See AUTHORS.txt for a list of people who contributed.
@@ -21,7 +23,7 @@ thisfile = locals().get('__file__', 'TestStructure.py')
 tests_dir = os.path.dirname(os.path.abspath(thisfile))
 testdata_dir = os.path.join(tests_dir, 'testdata')
 
-sys.path.insert(0,os.path.abspath('..'))# this should put the source code first on the path
+sys.path.insert(0, os.path.abspath('..'))# this should put the source code first on the path
 from danse.ins.matter.Structure import Structure
 from danse.ins.matter.Lattice import Lattice
 from danse.ins.matter.Atom import Atom#, StructureFormatError
@@ -35,7 +37,7 @@ class TestStructure(unittest.TestCase):
 #        at2 = Atom('C', [0.666666666666667, 0.333333333333333, 0])
         at1 = Atom('C', [0, 0, 0])
         at2 = Atom('C', [1, 1, 1])
-        self.stru = Structure( [ at1, at2], lattice=Lattice(1, 1, 1, 90, 90, 120) )
+        self.stru = Structure([at1, at2], lattice=Lattice(1, 1, 1, 90, 90, 120))
         
         ciffile = os.path.join(testdata_dir, 'PbTe.cif')
         self.stru2 = Structure()
@@ -49,9 +51,9 @@ class TestStructure(unittest.TestCase):
         at2 = Atom('Al', [0.0, 0.5, 0.5])
         at3 = Atom('Al', [0.5, 0.0, 0.5])
         at4 = Atom('Al', [0.5, 0.5, 0.0])
-        self.stru4 = Structure( [ at1, at2, at3, at4], 
+        self.stru4 = Structure([at1, at2, at3, at4], 
                                lattice=Lattice(4.05, 4.05, 4.05, 90, 90, 90),
-                               sgid = 225 )
+                               sgid=225)
         
         self.places = 12
         
@@ -68,17 +70,17 @@ class TestStructure(unittest.TestCase):
         at2 = Atom('C', [0.666666666666667, 0.333333333333333, 0])
         #at3 = Atom('H', [0, 0, 0])
         
-        stru = Structure( [ at1, at2], lattice=Lattice(3.8, 3.8, 5.6, 90, 90, 120) )
-        assert stru.getChemicalFormula()=='C_2'
+        stru = Structure([at1, at2], lattice=Lattice(3.8, 3.8, 5.6, 90, 90, 120))
+        assert stru.getChemicalFormula() == 'C_2'
         #self.assertListAlmostEqual(stru.xyz, [[0.33333333333333298, 0.66666666666666696, 0.0], [0.66666666666666696, 0.33333333333333298, 0.0]])
         #self.assertListAlmostEqual(stru.xyz_cartn,[[1.0969655114602876, 1.9000000000000017, 0.0], [2.1939310229205784, -2.0020877317117325e-15, 0.0]])
         #self.assertListAlmostEqual(stru.symbols, ['C', 'C'])
-        #print "here's the lattice", stru.lattice.base
+        #print("here's the lattice", stru.lattice.base)
         return
     
     def test_writeStr(self):
         """check Structure.writeStr()"""
-        print self.stru3.writeStr('xyz')
+        print(self.stru3.writeStr('xyz'))
         return
     
     # FIXME move into TestAtom
@@ -192,15 +194,15 @@ class TestStructure(unittest.TestCase):
         assert sg.number is 225
         assert sg.num_sym_equiv is 192
         assert sg.num_primitive_sym_equiv is 48
-        assert sg.short_name=='Fm-3m'
-        assert sg.alt_name=='F M 3 M'
-        assert sg.point_group_name=='PGm3barm'
-        assert sg.crystal_system=='CUBIC'
-        assert sg.pdb_name=='F 4/m -3 2/m'
+        assert sg.short_name == 'Fm-3m'
+        assert sg.alt_name == 'F M 3 M'
+        assert sg.point_group_name == 'PGm3barm'
+        assert sg.crystal_system == 'CUBIC'
+        assert sg.pdb_name == 'F 4/m -3 2/m'
         assert_array_almost_equal(sg.symop_list[1].R, numpy.identity(3))
-        assert_array_almost_equal(sg.symop_list[1].t, numpy.array([ 0. ,  0.5,  0.5]))
+        assert_array_almost_equal(sg.symop_list[1].t, numpy.array([0., 0.5, 0.5]))
 #        for symmop in sg.symop_list:
-#            print symmop
+#            print(symmop)
 
     def test_symConsistent(self):
         
@@ -208,17 +210,17 @@ class TestStructure(unittest.TestCase):
         assert result[0] is True
         
         self.stru3.sg = 225
-        result,badAtomPos,badSymOp = self.stru3.symConsistent()
+        result, badAtomPos, badSymOp = self.stru3.symConsistent()
         assert result is False
-        #print badAtomPos,badSymOp
+        #print(badAtomPos,badSymOp)
         
     def test_PrimCellFind(self):
         ""
-        #print 'PbTe 225'
-        #print self.stru2.primitive_unitcell
-        #print 'graphite'
-        #print self.stru3.primitive_unitcell
-        #print
+        #print('PbTe 225')
+        #print(self.stru2.primitive_unitcell)
+        #print('graphite')
+        #print(self.stru3.primitive_unitcell)
+        #print()
         
     def test_bravais_crystalsystem_centering(self):
         
@@ -229,14 +231,14 @@ class TestStructure(unittest.TestCase):
 
     def test_species(self):
         ""
-        #print self.stru2.getChemicalFormula()
-        #print
-        #print self.stru3.getChemicalFormula()
-        #print
+        #print(self.stru2.getChemicalFormula())
+        #print()
+        #print(self.stru3.getChemicalFormula())
+        #print()
  
 #    not fully functional
 #    def test_distanceCalc(self):
-#        print self.stru.computeDistances()
+#        print(self.stru.computeDistances())
 
 
 #   def test_read(self):

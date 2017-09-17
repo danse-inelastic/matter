@@ -1,3 +1,5 @@
+from __future__ import print_function
+
 ##############################################################################
 #
 # See AUTHORS.txt for a list of people who contributed.
@@ -21,7 +23,7 @@ thisfile = locals().get('__file__', 'TestStructure2.py')
 tests_dir = os.path.dirname(os.path.abspath(thisfile))
 testdata_dir = os.path.join(tests_dir, 'testdata')
 
-sys.path.insert(0,os.path.abspath('..'))# this should put the source code first on the path
+sys.path.insert(0, os.path.abspath('..'))# this should put the source code first on the path
 from danse.ins.matter.Structure import Structure
 
 ##############################################################################
@@ -33,12 +35,12 @@ class TestStructure(unittest.TestCase):
         xyzfile = os.path.join(testdata_dir, 'scf3.xyz')
         self.stru = Structure()
         self.stru.read(xyzfile)
-        #print self.stru5
+        #print(self.stru5)
         
         file = os.path.join(testdata_dir, 'Pb.cif')
         self.stru2 = Structure()
         self.stru2.read(file)
-        #print self.stru2
+        #print(self.stru2)
         
 #        xyzfile = os.path.join(testdata_dir, 'KC24PosAndCharges.xyz')
 #        self.stru2 = Structure()
@@ -48,9 +50,9 @@ class TestStructure(unittest.TestCase):
         
     def testRS(self):
         """reciprocal space tests"""
-        print self.stru2.lattice
-        print self.stru2.lattice.recbase
-        print self.stru2.lattice.recbase2pi  
+        print(self.stru2.lattice)
+        print(self.stru2.lattice.recbase)
+        print(self.stru2.lattice.recbase2pi)  
         
     def assertListAlmostEqual(self, l1, l2, places=None):
         """wrapper for list comparison"""
@@ -64,11 +66,11 @@ class TestStructure(unittest.TestCase):
         charges = [0.0, 0.0, 0.0, 0.0]
         self.stru.charges = charges
         self.assertAlmostEqual(self.stru[0].charge, charges[0])
-        #print self.stru2.charges
+        #print(self.stru2.charges)
 
     def test_writeStr(self):
         """check Structure.writeStr()"""
-        print self.stru.writeStr('xyz')
+        print(self.stru.writeStr('xyz'))
         return
 
 # End of class TestStructure

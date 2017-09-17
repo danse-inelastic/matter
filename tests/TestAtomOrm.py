@@ -1,21 +1,19 @@
+from __future__ import print_function
 
-
-
-
-import sys,os
+import sys, os
 import unittest
 
-sys.path.insert(0,os.path.abspath('..'))
-print sys.path
+sys.path.insert(0, os.path.abspath('..'))
+print(sys.path)
 
 from danse.ins.matter import Atom
 
-class TestCase( unittest.TestCase ):
+class TestCase(unittest.TestCase):
     
 
     def test_dsaworm(self):
         'Atom: dsaw orm'
-        Fe57 = Atom( 'Fe', mass=57 )
+        Fe57 = Atom('Fe', mass=57)
 
         orm = self.orm
         Fe57record = orm(Fe57)
@@ -46,7 +44,7 @@ class TestCase( unittest.TestCase ):
 
     def _dbManager(self):
         from dsaw.db import connect
-        db = connect(db ='postgres:///test')
+        db = connect(db='postgres:///test')
         db.autocommit(True)
         return db
 

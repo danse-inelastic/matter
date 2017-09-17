@@ -1,20 +1,18 @@
+from __future__ import print_function
 
-
-
-
-import sys,os
+import sys, os
 import unittest
 
-sys.path.insert(0,os.path.abspath('..'))
+sys.path.insert(0, os.path.abspath('..'))
 
 from danse.ins.matter.orm.Lattice import Lattice
 
-class TestCase( unittest.TestCase ):
+class TestCase(unittest.TestCase):
     
 
     def test_dsaworm(self):
         'Lattice: dsaw orm'
-        lattice = Lattice(a=1,b=2,c=3,alpha=89,beta=91,gamma=92)
+        lattice = Lattice(a=1, b=2, c=3, alpha=89, beta=91, gamma=92)
 
         orm = self.orm
         latticerecord = orm(lattice)
@@ -25,10 +23,10 @@ class TestCase( unittest.TestCase ):
 
         props = [d.name for d in Lattice.Inventory.getDescriptors()]
         for prop in props:
-        #    self.assertEqual(getattr(lattice_loaded, prop), getattr(lattice, prop))
-        #    continue
-            print getattr(lattice_loaded, prop)
-            print getattr(lattice, prop)
+            #self.assertEqual(getattr(lattice_loaded, prop), getattr(lattice, prop))
+            #continue
+            print(getattr(lattice_loaded, prop))
+            print(getattr(lattice, prop))
         return
 
 
@@ -47,7 +45,7 @@ class TestCase( unittest.TestCase ):
 
     def _dbManager(self):
         from dsaw.db import connect
-        db = connect(db ='postgres:///test')
+        db = connect(db='postgres:///test')
         db.autocommit(True)
         return db
 
