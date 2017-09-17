@@ -1,5 +1,5 @@
 from dsaw.db import connect
-db = connect(db ='postgres:///test', echo = True)
+db = connect(db='postgres:///test', echo=True)
 db.autocommit(True)
 from dsaw.model.visitors.OrmManager import OrmManager
 orm = OrmManager(db)
@@ -17,7 +17,7 @@ at2.id = 'at2'
 hexag = Lattice(1, 1, 1, 90, 90, 120)
 hexag.id = 'hexag'
 
-graphite = Structure( [ at1, at2], lattice = hexag)
+graphite = Structure([at1, at2], lattice=hexag)
 graphite.id = 'graphite'
 orm.save(graphite)
 

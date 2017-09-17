@@ -1,5 +1,5 @@
 from dsaw.db import connect
-db = connect(db ='postgres:///test')
+db = connect(db='postgres:///test')
 db.autocommit(True)
 from dsaw.model.visitors.OrmManager import OrmManager
 orm = OrmManager(db)
