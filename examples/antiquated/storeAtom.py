@@ -1,8 +1,10 @@
+from __future__ import print_function
+
 import sys
-print sys.path
+print(sys.path)
 
 from dsaw.db import connect
-db = connect(db ='postgres:///test', echo = True)
+db = connect(db='postgres:///test', echo=True)
 db.autocommit(True)
 
 # we have to create system tables because we're using a reference
@@ -25,9 +27,9 @@ a1.lattice = l1
 
 db.insertRow(a1)
 
-print a1
-print a1.lattice
-print a1.lattice.dereference(db)
+print(a1)
+print(a1.lattice)
+print(a1.lattice.dereference(db))
 #H    0.000000 0.000000 0.000000 1.0000
 #lattice###l1
 #Lattice()

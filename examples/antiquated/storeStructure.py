@@ -1,8 +1,10 @@
+from __future__ import print_function
+
 import sys
-print sys.path
+print(sys.path)
 
 from dsaw.db import connect
-db = connect(db ='postgres:///test', echo = True)
+db = connect(db='postgres:///test', echo=True)
 db.autocommit(True)
 
 from matter.orm.Atom import Atom
@@ -36,7 +38,7 @@ hexag.id = 'hexag'
 db.insertRow(hexag)
 db.commit()
 
-graphite = Structure( [ at1, at2], lattice = hexag)
+graphite = Structure([at1, at2], lattice=hexag)
 graphite.id = 'graphite'
 db.insertRow(graphite)
 db.commit()

@@ -1,8 +1,10 @@
+from __future__ import print_function
+
 import sys
-print sys.path
+print(sys.path)
 
 from dsaw.db import connect
-db = connect(db ='postgres:///test')
+db = connect(db='postgres:///test')
 db.autocommit(True)
 
 # declare tables
