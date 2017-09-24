@@ -1,3 +1,5 @@
+from __future__ import print_function
+
 # Olivier Delaire 
 
 __doc__ = """Converters for UnitCell."""
@@ -30,7 +32,7 @@ def unitCell2ListOfAtom(uc, makeCartesian=False):
     """Utility to convert a UnitCell instance to a ASE ListOfAtom instance."""
     import ASE.ListOfAtoms
     import ASE.Atom
-    loa = ASE.ListOfAtoms([],periodic=True) 
+    loa = ASE.ListOfAtoms([], periodic=True) 
     loa.SetUnitCell(uc._cellvectors, fix=True)
     for site in uc:
         if makeCartesian:
@@ -53,7 +55,7 @@ def p4vaspStruct2UnitCell(struct):
     try:
         from AbInitio.vasp.parsing.Structure import Structure
     except ImportError:
-        print "P4Vasp could not be imported in Python."
+        print("P4Vasp could not be imported in Python.")
 
     uc = UnitCell()
     cellvecs = [v.data for v in struct.basis]
@@ -79,7 +81,7 @@ def unitCell2P4vaspStruct(uc):
         from AbInitio.vasp.parsing.Structure import Structure
         import AbInitio.vasp.parsing.matrix as p4mat
     except ImportError:
-        print "P4Vasp could not be imported in Python."
+        print("P4Vasp could not be imported in Python.")
     struct = Structure()
     struct.basis = [p4mat.Vector(v.tolist()) for v in uc.getCellVectors()]
     #struct.positions = [p4mat.Vector(v.tolist()) for v in uc.getPositions()]
@@ -98,11 +100,6 @@ def unitCell2P4vaspStruct(uc):
         pos = p4mat.Vector(site.getPosition().tolist())
         atomtype = (site.getAtom().symbol, site.getAtom().mass)
         speciesindex = indexdict[atomtype]
-        #print atomtype, speciesindex
+        #print(atomtype, speciesindex)
         struct.appendAtom(speciesindex, pos)
     return struct
-    
-
-
-
-    
