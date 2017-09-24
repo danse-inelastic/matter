@@ -75,9 +75,9 @@ class _Element:
         try:
             module = __import__(name, globals(), locals(), [])
         except ImportError:
-            raise AttributeError, 'Unknown property!'
+            raise AttributeError('Unknown property!')
         stuff = getattr(module, '_data')[self.number]
         if stuff is None:
-            raise RuntimeError, 'Unknown!'
+            raise RuntimeError('Unknown!')
         setattr(self, name, stuff)
         return stuff
