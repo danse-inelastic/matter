@@ -8,9 +8,9 @@ class UnitCell:
     """Representation of a crystal unit cell."""
  
     atoms = []
-    base = [[1,0,0],
-            [0,1,0],
-            [0,0,1]]
+    base = [[1, 0, 0],
+            [0, 1, 0],
+            [0, 0, 1]]
     rounding_decimals = 6
 
     def __init__(self, base=None, atoms=None):
@@ -62,7 +62,7 @@ class UnitCell:
         xyz = atom.xyz_cartn
         xyz = self.calcFractionalCoordsInCell(xyz)
         for i, a in enumerate(self.atoms):
-            if a.symbol == atom.symbol and (np.round(a.xyz - xyz, self.rounding_decimals)==[0,0,0]).all():
+            if a.symbol == atom.symbol and (np.round(a.xyz - xyz, self.rounding_decimals) == [0, 0, 0]).all():
                 return i
             continue
         return None
@@ -75,7 +75,7 @@ class UnitCell:
 
 
     def __str__(self):
-        s_base = "base=%s" % self.base
+        s_base = "base={0!s}".format(self.base)
         s_atoms = '\n'.join([str(a) for a in self.atoms])
         return s_base + '\n' + s_atoms
 
@@ -86,57 +86,57 @@ import unittest
 class TestCase(unittest.TestCase):
 
     def test1(self):
-        base = np.array([[0,1,1], [1,0,1], [1,1,0]])
+        base = np.array([[0, 1, 1], [1, 0, 1], [1, 1, 0]])
         uc = UnitCell(base=base)
         assert_array_almost_equal(
-            uc.calcFractionalCoords([0,1,1]),
-            [1,0,0])
+            uc.calcFractionalCoords([0, 1, 1]),
+            [1, 0, 0])
         assert_array_almost_equal(
-            uc.calcFractionalCoords([0,0.99999999,0.999999999]),
-            [1,0,0])
+            uc.calcFractionalCoords([0, 0.99999999, 0.999999999]),
+            [1, 0, 0])
         assert_array_almost_equal(
-            uc.calcFractionalCoords([0,1.000000001,1.000000001]),
-            [1,0,0])
+            uc.calcFractionalCoords([0, 1.000000001, 1.000000001]),
+            [1, 0, 0])
         assert_array_almost_equal(
-            uc.calcFractionalCoords([1,0,1]),
-            [0,1,0])
+            uc.calcFractionalCoords([1, 0, 1]),
+            [0, 1, 0])
         assert_array_almost_equal(
-            uc.calcFractionalCoords([1,1,0]),
-            [0,0,1])
+            uc.calcFractionalCoords([1, 1, 0]),
+            [0, 0, 1])
         assert_array_almost_equal(
-            uc.calcFractionalCoords([2,0,0]),
-            [-1,1,1])
+            uc.calcFractionalCoords([2, 0, 0]),
+            [-1, 1, 1])
         
         assert_array_almost_equal(
-            uc.calcFractionalCoordsInCell([0,1,1]),
-            [0,0,0])
+            uc.calcFractionalCoordsInCell([0, 1, 1]),
+            [0, 0, 0])
         assert_array_almost_equal(
-            uc.calcFractionalCoordsInCell([1,0,1]),
-            [0,0,0])
+            uc.calcFractionalCoordsInCell([1, 0, 1]),
+            [0, 0, 0])
         assert_array_almost_equal(
-            uc.calcFractionalCoordsInCell([1,1,0]),
-            [0,0,0])
+            uc.calcFractionalCoordsInCell([1, 1, 0]),
+            [0, 0, 0])
         assert_array_almost_equal(
-            uc.calcFractionalCoordsInCell([2,0,0]),
-            [0,0,0])
+            uc.calcFractionalCoordsInCell([2, 0, 0]),
+            [0, 0, 0])
         return
 
 
     def test2(self):
         uc = UnitCell()
         
-        uc.addAtom(Atom('H', (0,0,0.1)))
+        uc.addAtom(Atom('H', (0, 0, 0.1)))
         
-        self.assert_(uc.hasAtom(Atom('H', (0,0,0.10000001))))
-        self.assert_(uc.hasAtom(Atom('H', (0,0,0.09999999))))
-        self.assert_(not uc.hasAtom(Atom('H', (0,0,0.11))))
-        self.assert_(not uc.hasAtom(Atom('H', (0,0,0.09))))
+        self.assert_(uc.hasAtom(Atom('H', (0, 0, 0.10000001))))
+        self.assert_(uc.hasAtom(Atom('H', (0, 0, 0.09999999))))
+        self.assert_(not uc.hasAtom(Atom('H', (0, 0, 0.11))))
+        self.assert_(not uc.hasAtom(Atom('H', (0, 0, 0.09))))
 
-        self.assert_(uc.hasAtom(Atom('H', (0,0,1.10000001))))
-        self.assert_(uc.hasAtom(Atom('H', (0,0,1.09999999))))
-        self.assert_(not uc.hasAtom(Atom('H', (0,0,1.11))))
-        self.assert_(not uc.hasAtom(Atom('H', (0,0,1.09))))
-        self.assert_(not uc.hasAtom(Atom('H', (0,0,1.09999))))
+        self.assert_(uc.hasAtom(Atom('H', (0, 0, 1.10000001))))
+        self.assert_(uc.hasAtom(Atom('H', (0, 0, 1.09999999))))
+        self.assert_(not uc.hasAtom(Atom('H', (0, 0, 1.11))))
+        self.assert_(not uc.hasAtom(Atom('H', (0, 0, 1.09))))
+        self.assert_(not uc.hasAtom(Atom('H', (0, 0, 1.09999))))
         return
 
 

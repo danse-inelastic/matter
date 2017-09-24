@@ -1,3 +1,5 @@
+from __future__ import division
+
 # Copyright 2009 Caltech
 # Copyright 2002 by PyMMLib Development Group (see AUTHORS file)
 # This code is part of the PyMMLib distribution and governed by
@@ -16,7 +18,7 @@ def warning(x):
     STRUCTURE_WARNING.  This can be set to a file path, "stdout", "stderr", or a
     empty string for no action.
     """
-    x = "WARNING: %s\n" % (x)
+    x = "WARNING: {0!s}\n".format(x)
     path = os.environ.get("STRUCTURE_WARNING", "stderr")
 
     try:
@@ -140,12 +142,12 @@ class SymOp(object):
         self.t = t
 
     def __str__(self):
-        x  = "[%6.3f %6.3f %6.3f %6.3f]\n" % (
-            self.R[0,0], self.R[0,1], self.R[0,2], self.t[0])
-        x += "[%6.3f %6.3f %6.3f %6.3f]\n" % (
-            self.R[1,0], self.R[1,1], self.R[1,2], self.t[1])
-        x += "[%6.3f %6.3f %6.3f %6.3f]\n" % (
-            self.R[2,0], self.R[2,1], self.R[2,2], self.t[2])
+        x  = "[{0:6.3f} {1:6.3f} {2:6.3f} {3:6.3f}]\n".format(
+            self.R[0, 0], self.R[0, 1], self.R[0, 2], self.t[0])
+        x += "[{0:6.3f} {1:6.3f} {2:6.3f} {3:6.3f}]\n".format(
+            self.R[1, 0], self.R[1, 1], self.R[1, 2], self.t[1])
+        x += "[{0:6.3f} {1:6.3f} {2:6.3f} {3:6.3f}]\n".format(
+            self.R[2, 0], self.R[2, 1], self.R[2, 2], self.t[2])
         return x
 
     def __call__(self, vec):
@@ -8046,7 +8048,7 @@ def GetSpaceGroup(sgid):
     if sgid in _sg_lookup_table:
         return _sg_lookup_table[sgid]
     # Try different versions of sgid, first make sure it is a string
-    emsg = "Unknown space group identifier %r" % sgid
+    emsg = "Unknown space group identifier {0!r}".format(sgid)
     if type(sgid) not in types.StringTypes:
         raise ValueError(emsg)
     # short name case adjusted

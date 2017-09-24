@@ -3,8 +3,8 @@
 class AtomicObject(object):
     
     def __init__(self):
-        self.speciesList=[]
-        self.forcefields={}
+        self.speciesList = []
+        self.forcefields = {}
 #        twoAtomInteractions=
 #        for species1 in speciesList:
 #            for species2 in speciesList:
@@ -19,10 +19,6 @@ class AtomicObject(object):
     def getAvailableForceFields(self):
         pass
     
-    def setForceField(self,atomsNForceField):
-        for atom,fflabel in atomsNForceField.iteritems():
+    def setForceField(self, atomsNForceField):
+        for atom, fflabel in atomsNForceField.iteritems():
             atom
-            
-        
-    
-    

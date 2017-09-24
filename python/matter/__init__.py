@@ -3,12 +3,12 @@
 import sys
 vinfo =  sys.version_info
 if vinfo[0] != 2: raise NotImplementedError
-METACLASS_CTOR_NEEDS_TYPE = vinfo[1]>5
+METACLASS_CTOR_NEEDS_TYPE = vinfo[1] > 5
 
 
 import crystalIO
 import atomic_properties
-from .StructureErrors import StructureFormatError,LatticeError,SymmetryError,IsotropyError
+from .StructureErrors import StructureFormatError, LatticeError, SymmetryError, IsotropyError
 from .Atom import Atom
 from .Lattice import Lattice
 from .Structure import Structure

@@ -15,12 +15,12 @@ from danse.ins import matter
 #
 # Atoms
 #
-def A(name, index, type = None):
+def A(name, index, type=None):
     from .Atom import Atom
     #hack--sometimes 'name' contains element and sometimes 'type'
-    if len(name)<3:
+    if len(name) < 3:
         return Atom(name)
-    if len(type)<3:
+    if len(type) < 3:
         return Atom(type)
 
 
@@ -46,32 +46,32 @@ def A(name, index, type = None):
 #MMTK wrappers
 def OrthorhombicPeriodicUniverse(vecLengths):
     from .Lattice import Lattice
-    return Lattice(base=[[vecLengths[0],0,0], [0,vecLengths[1],0],
-                                         [0,0,vecLengths[2]]])
+    return Lattice(base=[[vecLengths[0], 0, 0], [0, vecLengths[1], 0],
+                                         [0, 0, vecLengths[2]]])
     
 def ParallelepipedicPeriodicUniverse(vecs):
     from .Lattice import Lattice
     return Lattice(base=vecs)
     
-def Vector(a,b,c):
-    return [a,b,c]
+def Vector(a, b, c):
+    return [a, b, c]
 
 #
 # Composite chemical objects
 #
 class Composite:
 
-    def __init__(self, name, list, type = None, **kwargs):
+    def __init__(self, name, list, type=None, **kwargs):
         self.name = name
         self.list = list
         self.type = type
         self.kwargs = kwargs
 
-    def make(self, info, conf = None):
+    def make(self, info, conf=None):
         object = self._class(self.type, name=self.name)
         for sub in self.list:
             sub.assignIndex(getattr(object, sub.name), info, conf)
-        if self.kwargs.has_key('dc'):
+        if 'dc' in self.kwargs:
             for a1, a2, d in self.kwargs['dc']:
                 object.addDistanceConstraint(info[a1], info[a2], d)
         return object
@@ -195,7 +195,7 @@ class o:
     def __init__(self, creation):
         self.creation = creation
 
-    def make(self, info, conf = None):
+    def make(self, info, conf=None):
         return _evalString(self.creation)
 
 #
@@ -219,17 +219,17 @@ def _evalStringOld(description):
         try:
             o = eval(description, namespace, local)
             done = True
-        except NameError, exception:
+        except NameError as exception:
             name = str(exception).split("'")[1]
             __import__(name)
             namespace[name] = sys.modules[name]
             imported.append(name)
-        except AttributeError, exception:
+        except AttributeError as exception:
             if str(exception).split("'")[1] == "module":
                 name = str(exception).split("'")[3]
                 for m in imported:
                     try:
-                        module_name = "%s.%s" % (m, name)
+                        module_name = "{0!s}.{1!s}".format(m, name)
                         __import__(module_name)
                         imported.append(module_name)
                     except ImportError:

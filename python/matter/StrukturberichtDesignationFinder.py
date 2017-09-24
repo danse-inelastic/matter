@@ -1,3 +1,4 @@
+from __future__ import division
 
 '''
 find out the Strukturbericht Designation of a structure
@@ -10,14 +11,14 @@ TODO: add much more handlers.
 
 class StrukturberichtDesignation:
 
-    def __init__(self, symbol = None, alias = None):
+    def __init__(self, symbol=None, alias=None):
         self.symbol = symbol
         self.alias = alias
         return
 
 
     def __str__(self):
-        return '%s(%s)' % (self.symbol, self.alias)
+        return '{0!s}({1!s})'.format(self.symbol, self.alias)
     __repr__ = __str__
 
 
@@ -41,7 +42,7 @@ class StrukturberichtDesignationFinder:
         sg = struct.sg
         number = sg.number
         
-        handler = '_on_%s_%s' % (number, n)
+        handler = '_on_{0!s}_{1!s}'.format(number, n)
         
         if not hasattr(self, handler): return
         method = getattr(self, handler)
@@ -104,9 +105,9 @@ class TestCase(unittest.TestCase):
 
     def testA1(self):
         struct = matter.Structure(
-            lattice = matter.Lattice(a=1,b=1,c=1,alpha=60,beta=60,gamma=60),
-            sgid = 225,
-            atoms = [matter.Atom('Cu')],
+            lattice=matter.Lattice(a=1, b=1, c=1, alpha=60, beta=60, gamma=60),
+            sgid=225,
+            atoms=[matter.Atom('Cu')],
             )
         self.assertEqual(StrukturberichtDesignationFinder().find(struct), A1)
         return
@@ -114,16 +115,16 @@ class TestCase(unittest.TestCase):
 
     def testA2(self):
         struct = matter.Structure(
-            lattice = matter.Lattice(a=1,b=1,c=1,alpha=acos1_3,beta=acos1_3,gamma=acos1_3),
-            sgid = 229,
-            atoms = [matter.Atom('Cu')],
+            lattice=matter.Lattice(a=1, b=1, c=1, alpha=acos1_3, beta=acos1_3, gamma=acos1_3),
+            sgid=229,
+            atoms=[matter.Atom('Cu')],
             )
         self.assertEqual(StrukturberichtDesignationFinder().find(struct), A2)
 
         struct = matter.Structure(
-            lattice = matter.Lattice(a=1,b=1,c=1,alpha=90,beta=90,gamma=90),
-            sgid = 229,
-            atoms = [matter.Atom('Cu', xyz=[0,0,0]), matter.Atom('Cu', xyz=[0.5,0.5,0.5])],
+            lattice=matter.Lattice(a=1, b=1, c=1, alpha=90, beta=90, gamma=90),
+            sgid=229,
+            atoms=[matter.Atom('Cu', xyz=[0, 0, 0]), matter.Atom('Cu', xyz=[0.5, 0.5, 0.5])],
             )
         self.assertEqual(StrukturberichtDesignationFinder().find(struct), A2)
 
@@ -132,9 +133,9 @@ class TestCase(unittest.TestCase):
 
     def testAh(self):
         struct = matter.Structure(
-            lattice = matter.Lattice(a=1,b=1,c=1,alpha=90,beta=90,gamma=90),
-            sgid = 221,
-            atoms = [matter.Atom('Cu')],
+            lattice=matter.Lattice(a=1, b=1, c=1, alpha=90, beta=90, gamma=90),
+            sgid=221,
+            atoms=[matter.Atom('Cu')],
             )
         self.assertEqual(StrukturberichtDesignationFinder().find(struct), Ah)
         return
@@ -142,9 +143,9 @@ class TestCase(unittest.TestCase):
 
     def testB1(self):
         struct = matter.Structure(
-            lattice = matter.Lattice(a=1,b=1,c=1,alpha=60,beta=60,gamma=60),
-            sgid = 225,
-            atoms = [matter.Atom('Na'), matter.Atom('Cl', xyz=[0.5,0.5,0.5])],
+            lattice=matter.Lattice(a=1, b=1, c=1, alpha=60, beta=60, gamma=60),
+            sgid=225,
+            atoms=[matter.Atom('Na'), matter.Atom('Cl', xyz=[0.5, 0.5, 0.5])],
             )
         self.assertEqual(StrukturberichtDesignationFinder().find(struct), B1)
         return
@@ -152,9 +153,9 @@ class TestCase(unittest.TestCase):
 
     def testB2(self):
         struct = matter.Structure(
-            lattice = matter.Lattice(a=1,b=1,c=1,alpha=90,beta=90,gamma=90),
-            sgid = 221,
-            atoms = [matter.Atom('Cs'), matter.Atom('Cl', xyz=[0.5,0.5,0.5])],
+            lattice=matter.Lattice(a=1, b=1, c=1, alpha=90, beta=90, gamma=90),
+            sgid=221,
+            atoms=[matter.Atom('Cs'), matter.Atom('Cl', xyz=[0.5, 0.5, 0.5])],
             )
         self.assertEqual(StrukturberichtDesignationFinder().find(struct), B2)
         return
@@ -162,9 +163,9 @@ class TestCase(unittest.TestCase):
 
     def testMethodInStructureClass(self):
         struct = matter.Structure(
-            lattice = matter.Lattice(a=1,b=1,c=1,alpha=60,beta=60,gamma=60),
-            sgid = 225,
-            atoms = [matter.Atom('Cu')],
+            lattice=matter.Lattice(a=1, b=1, c=1, alpha=60, beta=60, gamma=60),
+            sgid=225,
+            atoms=[matter.Atom('Cu')],
             )
         self.assertEqual(struct.StrukturberichtDesignation, A1)
         return

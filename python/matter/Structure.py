@@ -80,7 +80,7 @@ class Structure(list):
 
     def __str__(self):
         """simple string representation"""
-        s_lattice = "lattice=%s" % self.lattice
+        s_lattice = "lattice={0!s}".format(self.lattice)
         s_atoms = '\n'.join([str(a) for a in self])
         return s_lattice + '\n' + s_atoms
 
@@ -90,12 +90,12 @@ class Structure(list):
         counts = {}
         for atom in atoms:
             e = atom.symbol
-            if e in counts: counts[e]+=1
-            else: counts[e]=1
+            if e in counts: counts[e] += 1
+            else: counts[e] = 1
             continue
         elems = counts.keys()
         elems.sort()
-        chemFormRaw = ''.join( '%s_%s ' % (e, counts[e]) for e in elems )
+        chemFormRaw = ''.join('{0!s}_{1!s} '.format(e, counts[e]) for e in elems)
         return chemFormRaw.strip()
     
     def getSpecies(self):
@@ -139,17 +139,17 @@ class Structure(list):
         ('I', 'CUBIC'):'body centered cubic', 
         ('P', 'HEXAGONAL'):'simple hexagonal',
         ('P', 'TRIGONAL'):'simple trigonal',
-        ('P','TETRAGONAL'):'simple tetragonal',
-        ('R','TETRAGONAL'):'simple tetragonal',
-        ('I','TETRAGONAL'):'body centered tetragonal',
-        ('P','ORTHORHOMBIC'):'simple orthorhombic',
-        ('C','ORTHORHOMBIC'):'base centered orthorhombic',
-        ('A','ORTHORHOMBIC'):'base centered orthorhombic',
-        ('F','ORTHORHOMBIC'):'face centered orthorhombic',
-        ('I','ORTHORHOMBIC'):'body centered orthorhombic',
-        ('P','ORTHORHOMBIC'):'simple monoclinic',
-        ('P','MONOCLINIC'):'base centered monoclinic',
-        ('P','TRICLINIC'):'triclinic'                  
+        ('P', 'TETRAGONAL'):'simple tetragonal',
+        ('R', 'TETRAGONAL'):'simple tetragonal',
+        ('I', 'TETRAGONAL'):'body centered tetragonal',
+        ('P', 'ORTHORHOMBIC'):'simple orthorhombic',
+        ('C', 'ORTHORHOMBIC'):'base centered orthorhombic',
+        ('A', 'ORTHORHOMBIC'):'base centered orthorhombic',
+        ('F', 'ORTHORHOMBIC'):'face centered orthorhombic',
+        ('I', 'ORTHORHOMBIC'):'body centered orthorhombic',
+        ('P', 'ORTHORHOMBIC'):'simple monoclinic',
+        ('P', 'MONOCLINIC'):'base centered monoclinic',
+        ('P', 'TRICLINIC'):'triclinic'                  
         }
         return centeringAndSystem2bravais[(self.sg.short_name[0], self.sg.crystal_system)]
     bravais_type = property(_getBravaisType)
@@ -199,20 +199,20 @@ class Structure(list):
         sg = self.sg
         verdict, atompos, symop = self.symConsistent()
         if not verdict:
-            raise RuntimeError, \
-                  "inconsistent structure: atom position: %s, sym operation %s" % (
-                atompos, symop)
+            raise RuntimeError(\
+                  "inconsistent structure: atom position: {0!s}, sym operation {1!s}".format(
+                atompos, symop))
 
         #
         if sg.number == 225:
             # face centered--below is only for cubic...need to generalize
             a = self.lattice.a
-            base = numpy.array([[0,1,1], [1,0,1], [1,1,0]])*0.5*a
+            base = numpy.array([[0, 1, 1], [1, 0, 1], [1, 1, 0]])*0.5*a
             
         elif sg.number == 229:
             # body centered--below is only for cubic...need to generalize
             a = self.lattice.a
-            base = numpy.array([[1,0,0], [0,1,0], [0.5,0.5,0.5]])*a
+            base = numpy.array([[1, 0, 0], [0, 1, 0], [0.5, 0.5, 0.5]])*a
             
             
         elif sg.short_name[0] == 'P':
@@ -260,7 +260,7 @@ class Structure(list):
                     self._update_labels()
                 rv = self._labels[id]
         except (IndexError, KeyError):
-            emsg = "Invalid atom identifier %r." % id
+            emsg = "Invalid atom identifier {0!r}.".format(id)
             raise ValueError(emsg)
         return rv
 
@@ -285,11 +285,11 @@ class Structure(list):
         pos = numpy.array(fracpos)
         assert (len(pos) == 3)
         for i in range(3):
-            if pos[i]<0:
-                while pos[i]<0:
+            if pos[i] < 0:
+                while pos[i] < 0:
                     pos[i] += 1
-            if pos[i]>=1:
-                while pos[i]>=1:
+            if pos[i] >= 1:
+                while pos[i] >= 1:
                     pos[i] -= 1
         return pos
 
@@ -304,7 +304,7 @@ class Structure(list):
         """
         try:
             posincell = self.getCartesianPosition(siteId)
-        except KeyError: raise KeyError, 'Invalid site Id'
+        except KeyError: raise KeyError('Invalid site Id')
         pos = numpy.array(posincell) + numpy.dot(latticeVector, self._lattice)
         return pos
     
@@ -331,7 +331,7 @@ class Structure(list):
         return (cartpos * numpy.linalg.inv(self._lattice)).sum(0)  # should be double-checked
     
     def generateDescription(self):
-        if self._description==None:
+        if self._description == None:
             self._description = self.getChemicalFormula()#+' in '+str(self.lattice)
         return self._description
     def setDescription(self, desc):
@@ -349,46 +349,46 @@ class Structure(list):
     def _get_xyz(self):
         return [atom.xyz.tolist()  for atom in self[:]]
     def _set_xyz(self, xyzList):
-        for atom,xyz in zip(self, xyzList):
+        for atom, xyz in zip(self, xyzList):
             atom.xyz = xyz
-    xyz = property(_get_xyz, _set_xyz, doc =
-        """fractional coordinates of all atoms""" )  
+    xyz = property(_get_xyz, _set_xyz, doc=
+        """fractional coordinates of all atoms""") 
 
     # xyz_cartn
     def _get_xyz_cartn(self):
         return [atom.xyz_cartn.tolist() for atom in self[:]]
     def _set_xyz_cartn(self, xyzList):
-        for atom,xyz_cartn in zip(self, xyzList):
+        for atom, xyz_cartn in zip(self, xyzList):
             atom.xyz_cartn = xyz_cartn
-    xyz_cartn = property(_get_xyz_cartn, _set_xyz_cartn, doc =
-        """absolute Cartesian coordinates of all atoms""" )   
+    xyz_cartn = property(_get_xyz_cartn, _set_xyz_cartn, doc=
+        """absolute Cartesian coordinates of all atoms""") 
     
     # symbols
     def _get_symbols(self):
         return [atom.symbol for atom in self[:]]
     def _set_symbols(self, symbolList):
-        for atom,symbol in zip(self, symbolList):
+        for atom, symbol in zip(self, symbolList):
             atom.symbol = symbol
-    symbols = property(_get_symbols, _set_symbols, doc =
-        """symbols of all atoms""" )  
+    symbols = property(_get_symbols, _set_symbols, doc=
+        """symbols of all atoms""") 
     
     # forces
     def _get_forces(self):
         return [atom.force for atom in self]
     def _set_forces(self, forceList):
-        for atom,force in zip(self, forceList):
+        for atom, force in zip(self, forceList):
             atom.force = force
-    forces = property(_get_forces, _set_forces, doc =
-        """forces on all atoms""" )   
+    forces = property(_get_forces, _set_forces, doc=
+        """forces on all atoms""") 
     
     # charges
     def _get_charges(self):
         return [atom.charge for atom in self]
     def _set_charges(self, chargeList):
-        for atom,charge in zip(self, chargeList):
+        for atom, charge in zip(self, chargeList):
             atom.charge = charge
-    charges = property(_get_charges, _set_charges, doc =
-        """charges on all atoms in electron units""" )   
+    charges = property(_get_charges, _set_charges, doc=
+        """charges on all atoms in electron units""") 
     
 ################################################################################################    
 # geometry and symmetry methods--these should be farmed out to Geometry class which does all this--see vimm
@@ -421,10 +421,10 @@ class Structure(list):
         verdict = True
         nonCompliantAtomPosition = None
         nonCompliantSymOp = None
-        def arrayInList(trialArray,arrayList):
-            matchesQ=False
+        def arrayInList(trialArray, arrayList):
+            matchesQ = False
             for certainArray in arrayList:
-                if (numpy.round(trialArray-certainArray, decimal)==0).all():
+                if (numpy.round(trialArray-certainArray, decimal) == 0).all():
                     matchesQ = True
             return matchesQ
         sg = self.sg
@@ -434,7 +434,7 @@ class Structure(list):
             for symop in sg.symop_list:
                 rawPosition = numpy.dot(symop.R, atomPosition) + symop.t
                 fracPos, intPos = numpy.modf(numpy.round(rawPosition, decimal))
-                newPosition = numpy.mod(fracPos,1)
+                newPosition = numpy.mod(fracPos, 1)
                 if not arrayInList(newPosition, atomPositions):
                     verdict = False
                     nonCompliantAtomPosition = atomPosition
@@ -457,7 +457,7 @@ class Structure(list):
         self.lattice = new_lattice
         return self
     
-    def computeDistances(self, maxdist=30, latticeRange=[2,2,2]):
+    def computeDistances(self, maxdist=30, latticeRange=[2, 2, 2]):
         """ unitcell.computeDistances(self, [nx,ny,nz]):
         builds up a Big multiple dictionary, namely
         self.distances[atom1][atom2][(DX,DY,DZ)]
@@ -472,15 +472,15 @@ class Structure(list):
             distances[idA] = {}
             for iB in range(0, len(idlist)):
                 idB = idlist[iB]
-                distances[idA][idB]={}
-                for tx in range(-latticeRange[0],latticeRange[0]+1):
-                    for ty in range(-latticeRange[1],latticeRange[1]+1):
-                        for tz in range(-latticeRange[2],latticeRange[2]+1):
+                distances[idA][idB] = {}
+                for tx in range(-latticeRange[0], latticeRange[0]+1):
+                    for ty in range(-latticeRange[1], latticeRange[1]+1):
+                        for tz in range(-latticeRange[2], latticeRange[2]+1):
                             posA = self.getCartesianPosition(idA)
-                            posB = self.getCartesianPosition(idB) + numpy.dot([tx,ty,tz], self._lattice)
-                            dist = numpy.sqrt(numpy.sum( (posB-posA) * (posB-posA) ))
-                            if(dist<maxdist):
-                                distances[idA][idB][(tx,ty,tz)] = dist
+                            posB = self.getCartesianPosition(idB) + numpy.dot([tx, ty, tz], self._lattice)
+                            dist = numpy.sqrt(numpy.sum((posB-posA) * (posB-posA)))
+                            if(dist < maxdist):
+                                distances[idA][idB][(tx, ty, tz)] = dist
         self._distances = distances
         return distances
 
@@ -695,7 +695,7 @@ class Structure(list):
         for a in self:  a.lattice = value
         self._lattice = value
         return
-    lattice = property(_get_lattice, _set_lattice, doc =
+    lattice = property(_get_lattice, _set_lattice, doc=
         "Coordinate system for this Structure.")
     
     # space group
@@ -716,7 +716,7 @@ class Structure(list):
             self._sg = GetSpaceGroup(item)
             self._sgid = item
 
-    sg = property(_get_spaceGroup, _set_spaceGroup, doc =
+    sg = property(_get_spaceGroup, _set_spaceGroup, doc=
         """Space group for this structure.  This can be set 
         by instantiating with a new spacegroup class or with a space group id.
         One can also use the explicit setter.""")

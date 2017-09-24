@@ -78,9 +78,9 @@ class Lattice(object):
 #    normbase = recnormbase = [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]]
 
     def __init__(self, a=None, b=None, c=None,
-        alpha=None, beta=None, gamma=None,
-        baserot=numpy.identity(3, dtype=float),
-        base=None,):
+                 alpha=None, beta=None, gamma=None,
+                 baserot=numpy.identity(3, dtype=float),
+                 base=None,):
         """define new coordinate system, the default is Cartesian
         There are 4 ways how to create Lattice instance:
 
@@ -110,15 +110,15 @@ class Lattice(object):
         self.normbase = self.recnormbase = [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]]
         # work out argument variants
         # Lattice()
-        if [a,b,c,alpha,beta,gamma,base] == 7*[None]:
+        if [a, b, c, alpha, beta, gamma, base] == 7*[None]:
             self.setLatPar(1.0, 1.0, 1.0, 90.0, 90.0, 90.0, baserot)
         # Lattice(base=abc)
         elif base is not None:
             self.setLatBase(base)
         # Lattice(lat)
         elif isinstance(a, Lattice):
-            copythese = dict.fromkeys( ('baserot', 'base',
-                'recbase', 'normbase', 'recnormbase') )
+            copythese = dict.fromkeys(('baserot', 'base',
+                'recbase', 'normbase', 'recnormbase'))
             for attribute, value in a.__dict__.iteritems():
                 if attribute in copythese:
                     setattr(self, attribute, copy.deepcopy(value))
@@ -127,7 +127,7 @@ class Lattice(object):
         # otherwise do default Lattice(a, b, c, alpha, beta, gamma)
         else:
             self.setLatPar( float(a), float(b), float(c),
-                    float(alpha), float(beta), float(gamma), baserot )
+                    float(alpha), float(beta), float(gamma), baserot)
 
         return
 
@@ -150,9 +150,9 @@ class Lattice(object):
         if beta is not None: self.beta = float(beta)
         if gamma is not None: self.gamma = float(gamma)
         if baserot is not None: self.baserot = numpy.array(baserot)
-        (self.ca, self.sa) = (ca, sa) = ( cosd(self.alpha), sind(self.alpha) )
-        (self.cb, self.sb) = (cb, sb) = ( cosd(self.beta),  sind(self.beta) )
-        (self.cg, self.sg) = (cg, sg) = ( cosd(self.gamma), sind(self.gamma) )
+        (self.ca, self.sa) = (ca, sa) = (cosd(self.alpha), sind(self.alpha))
+        (self.cb, self.sb) = (cb, sb) = (cosd(self.beta),  sind(self.beta))
+        (self.cg, self.sg) = (cg, sg) = (cosd(self.gamma), sind(self.gamma))
         # Vunit is a volume of unit cell with a=b=c=1
         Vunit = math.sqrt(1.0 + 2.0*ca*cb*cg - ca*ca - cb*cb - cg*cg)
         # reciprocal lattice
@@ -169,16 +169,16 @@ class Lattice(object):
         self.betar = math.degrees(math.acos(cbr))
         self.gammar = math.degrees(math.acos(cgr))
         # metric tensor
-        self.metrics = numpy.array( [
-                [ self.a*self.a,     self.a*self.b*cg,  self.a*self.c*cb ],
-                [ self.b*self.a*cg,  self.b*self.b,     self.b*self.c*ca ],
-                [ self.c*self.a*cb,  self.c*self.b*ca,  self.c*self.c    ] ],
-                dtype=float )
+        self.metrics = numpy.array([
+                [self.a*self.a,     self.a*self.b*cg,  self.a*self.c*cb],
+                [self.b*self.a*cg,  self.b*self.b,     self.b*self.c*ca],
+                [self.c*self.a*cb,  self.c*self.b*ca,  self.c*self.c   ]],
+                dtype=float)
         #standard cartesian coordinates of lattice vectors
-        self.stdbase = numpy.array( [
-                [ 1.0/self.ar, -cgr/sgr/self.ar, cb*self.a ],
-                [ 0.0,         self.b*sa,        self.b*ca ],
-                [ 0.0,         0.0,              self.c    ] ],
+        self.stdbase = numpy.array([
+                [1.0/self.ar, -cgr/sgr/self.ar, cb*self.a],
+                [0.0,         self.b*sa,        self.b*ca],
+                [0.0,         0.0,              self.c   ]],
                 dtype=float )
         # cartesian coordinates of lattice vectors
         self.base = numpy.dot(self.stdbase, self.baserot)
@@ -187,7 +187,7 @@ class Lattice(object):
         # this is physics definition
         self.recbase2pi = 2*numpy.pi*self.recbase
         # bases normalized to unit reciprocal vectors
-        self.normbase = numpy.array([ self.base[0,:]*self.ar,
+        self.normbase = numpy.array([self.base[0,:]*self.ar,
                                     self.base[1,:]*self.br,
                                     self.base[2,:]*self.cr ])
         self.recnormbase = numpy.array(self.recbase)
@@ -238,31 +238,29 @@ class Lattice(object):
         self.betar = math.degrees(math.acos(cbr))
         self.gammar = math.degrees(math.acos(cgr))
         # standard orientation of lattice vectors
-        self.stdbase = numpy.array( [
-                [ 1.0/self.ar, -cgr/sgr/self.ar, cb*self.a ],
-                [ 0.0,         self.b*sa,        self.b*ca ],
-                [ 0.0,         0.0,              self.c    ] ],
-                dtype=float )
+        self.stdbase = numpy.array([
+                [1.0/self.ar, -cgr/sgr/self.ar, cb*self.a],
+                [0.0,         self.b*sa,        self.b*ca],
+                [0.0,         0.0,              self.c   ]],
+                dtype=float)
         # calculate unit cell rotation matrix,  base = stdbase*baserot
-        self.baserot = numpy.dot( numalg.inv(self.stdbase), self.base )
+        self.baserot = numpy.dot(numalg.inv(self.stdbase), self.base)
         # this is crystallographer's definition!!! see http://en.wikipedia.org/wiki/Reciprocal_lattice
         self.recbase = numalg.inv(self.base) 
         # this is physics definition
         self.recbase2pi = 2*numpy.pi*self.recbase
         # bases normalized to unit reciprocal vectors
-        self.normbase = numpy.array([ self.base[0,:]*self.ar,
+        self.normbase = numpy.array([self.base[0,:]*self.ar,
                                     self.base[1,:]*self.br,
-                                    self.base[2,:]*self.cr ])
+                                    self.base[2,:]*self.cr])
         self.recnormbase = numpy.array(self.recbase)
-        self.recnormbase[:,0] /= self.ar
-        self.recnormbase[:,1] /= self.br
         self.recnormbase[:,2] /= self.cr
         # update metrics tensor
-        self.metrics = numpy.array( [
-                [ self.a*self.a,     self.a*self.b*self.cg,  self.a*self.c*self.cb ],
-                [ self.b*self.a*self.cg,  self.b*self.b,     self.b*self.c*self.ca ],
-                [ self.c*self.a*self.cb,  self.c*self.b*self.ca,  self.c*self.c    ] ],
-                dtype=float )
+        self.metrics = numpy.array([
+                [self.a*self.a,     self.a*self.b*self.cg,  self.a*self.c*self.cb],
+                [self.b*self.a*self.cg,  self.b*self.b,     self.b*self.c*self.ca],
+                [self.c*self.a*self.cb,  self.c*self.b*self.ca,  self.c*self.c   ]],
+                dtype=float)
         return self
     
 #    def _getbase(self):
@@ -405,7 +403,7 @@ class Lattice(object):
         return rec
 
     
-    def getMonkhorstPackGrid(self, size, shift=(0,0,0)):
+    def getMonkhorstPackGrid(self, size, shift=(0, 0, 0)):
         """Returns a Monkhorst-Pack grid of order size[0]*size[1]*size[2],
         scaled by the reciprocal space unit cell.
         The shift is an optional vector shift to all points in the grid.
@@ -421,7 +419,7 @@ class Lattice(object):
         kpts.shape = (size[0], size[1], size[2], 3)
         return kpts
 
-    def getFracMonkhorstPackGrid(self, size, shift=(0,0,0)):
+    def getFracMonkhorstPackGrid(self, size, shift=(0, 0, 0)):
         """Returns a Monkhorst-Pack grid of order size[0]*size[1]*size[2],
         in fractional coordinates of the reciprocal space unit cell.
         The shift is an optional vector shift to all points in the grid.
@@ -469,7 +467,7 @@ class Lattice(object):
     def angle(self, u, v):
         """Return angle(u, v) --> angle of 2 lattice vectors in degrees.
         """
-        ca = self.dot(u, v)/( self.norm(u)*self.norm(v) )
+        ca = self.dot(u, v)/(self.norm(u)*self.norm(v))
         return math.degrees(math.acos(ca))
 
     def __repr__(self):
@@ -478,17 +476,16 @@ class Lattice(object):
         epsilon = 1.0e-8
         I3 = numpy.identity(3, dtype=float)
         abcABG = numpy.array([self.a, self.b, self.c,
-                            self.alpha, self.beta, self.gamma] )
+                            self.alpha, self.beta, self.gamma])
         rotbaseI3diff = max(numpy.reshape(numpy.fabs(self.baserot-I3), 9))
         cartlatpar = numpy.array([1.0, 1.0, 1.0 , 90.0, 90.0, 90.0])
         latpardiff = cartlatpar - self.abcABG()
         if rotbaseI3diff > epsilon:
-            s = "Lattice(base=%r)" % self.base
+            s = "Lattice(base={0!r})".format(self.base)
         elif numpy.fabs(latpardiff).max() < epsilon :
             s = "Lattice()"
         else:
-            s = "Lattice(a=%g, b=%g, c=%g, alpha=%g, beta=%g, gamma=%g)" % \
-                    self.abcABG()
+            s = "Lattice(a={0:g}, b={1:g}, c={2:g}, alpha={3:g}, beta={4:g}, gamma={5:g})".format(self.abcABG())
         return s
 
 

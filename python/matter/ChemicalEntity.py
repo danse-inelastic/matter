@@ -1,3 +1,5 @@
+from __future__ import print_function
+
 ########################################################################
 #
 # See AUTHORS.txt for a list of people who contributed.
@@ -65,7 +67,7 @@ class ChemicalEntity(list):
         self.date = time.ctime()
 #    def __str__(self):
 #        """simple string representation"""
-#        s_lattice = "lattice=%s" % self.lattice
+#        s_lattice = "lattice={0!s}".format(self.lattice)
 #        s_atoms = '\n'.join([str(a) for a in self])
 #        return s_lattice + '\n' + s_atoms
 
@@ -74,12 +76,12 @@ class ChemicalEntity(list):
         counts = {}
         for atom in atoms:
             e = atom.symbol
-            if e in counts: counts[e]+=1
-            else: counts[e]=1
+            if e in counts: counts[e] += 1
+            else: counts[e] = 1
             continue
         elems = counts.keys()
         elems.sort()
-        chemFormRaw = ''.join( '%s_%s ' % (e, counts[e]) for e in elems )
+        chemFormRaw = ''.join('{0!s}_{1!s} '.format(e, counts[e]) for e in elems)
         return chemFormRaw.strip()
     
     def getSpecies(self):
@@ -129,7 +131,7 @@ class ChemicalEntity(list):
                     self._update_labels()
                 rv = self._labels[id]
         except (IndexError, KeyError):
-            emsg = "Invalid atom identifier %r." % id
+            emsg = "Invalid atom identifier {0!r}.".format(id)
             raise ValueError(emsg)
         return rv
 
@@ -157,7 +159,7 @@ class ChemicalEntity(list):
             self._sites[isite].setPosition(positions[isite])
               
     def generateDescription(self):
-        if self._description==None:
+        if self._description is None:
             self._description = self.getChemicalFormula()#+' in '+str(self.lattice)
         return self._description
     def setDescription(self, desc):
@@ -175,46 +177,46 @@ class ChemicalEntity(list):
     def _get_xyz(self):
         return [atom.xyz.tolist()  for atom in self[:]]
     def _set_xyz(self, xyzList):
-        for atom,xyz in zip(self, xyzList):
+        for atom, xyz in zip(self, xyzList):
             atom.xyz = xyz
-    xyz = property(_get_xyz, _set_xyz, doc =
-        """fractional coordinates of all atoms""" )  
+    xyz = property(_get_xyz, _set_xyz, doc=
+        """fractional coordinates of all atoms""")  
 
     # xyz_cartn
     def _get_xyz_cartn(self):
         return [atom.xyz_cartn.tolist() for atom in self[:]]
     def _set_xyz_cartn(self, xyzList):
-        for atom,xyz_cartn in zip(self, xyzList):
+        for atom, xyz_cartn in zip(self, xyzList):
             atom.xyz_cartn = xyz_cartn
-    xyz_cartn = property(_get_xyz_cartn, _set_xyz_cartn, doc =
-        """absolute Cartesian coordinates of all atoms""" )   
+    xyz_cartn = property(_get_xyz_cartn, _set_xyz_cartn, doc=
+        """absolute Cartesian coordinates of all atoms""")   
     
     # symbols
     def _get_symbols(self):
         return [atom.symbol for atom in self[:]]
     def _set_symbols(self, symbolList):
-        for atom,symbol in zip(self, symbolList):
+        for atom, symbol in zip(self, symbolList):
             atom.symbol = symbol
-    symbols = property(_get_symbols, _set_symbols, doc =
-        """symbols of all atoms""" )  
+    symbols = property(_get_symbols, _set_symbols, doc=
+        """symbols of all atoms""")  
     
     # forces
     def _get_forces(self):
         return [atom.force for atom in self]
     def _set_forces(self, forceList):
-        for atom,force in zip(self, forceList):
+        for atom, force in zip(self, forceList):
             atom.force = force
-    forces = property(_get_forces, _set_forces, doc =
-        """forces on all atoms""" )   
+    forces = property(_get_forces, _set_forces, doc=
+        """forces on all atoms""")   
     
     # charges
     def _get_charges(self):
         return [atom.charge for atom in self]
     def _set_charges(self, chargeList):
-        for atom,charge in zip(self, chargeList):
+        for atom, charge in zip(self, chargeList):
             atom.charge = charge
-    charges = property(_get_charges, _set_charges, doc =
-        """charges on all atoms in electron units""" )   
+    charges = property(_get_charges, _set_charges, doc=
+        """charges on all atoms in electron units""")   
     
 ################################################################################################    
 # geometry and symmetry methods--these should be farmed out to Geometry class which does all this--see vimm
@@ -240,7 +242,7 @@ class ChemicalEntity(list):
         u12 = a2.xyz - a1.xyz
         return self.lattice.angle(u10, u12)
   
-    def computeDistances(self, maxdist=30, latticeRange=[2,2,2]):
+    def computeDistances(self, maxdist=30, latticeRange=[2, 2, 2]):
         """ unitcell.computeDistances(self, [nx,ny,nz]):
         builds up a Big multiple dictionary, namely
         self.distances[atom1][atom2][(DX,DY,DZ)]
@@ -256,14 +258,14 @@ class ChemicalEntity(list):
             for iB in range(0, len(idlist)):
                 idB = idlist[iB]
                 distances[idA][idB]={}
-                for tx in range(-latticeRange[0],latticeRange[0]+1):
-                    for ty in range(-latticeRange[1],latticeRange[1]+1):
-                        for tz in range(-latticeRange[2],latticeRange[2]+1):
+                for tx in range(-latticeRange[0], latticeRange[0]+1):
+                    for ty in range(-latticeRange[1], latticeRange[1]+1):
+                        for tz in range(-latticeRange[2], latticeRange[2]+1):
                             posA = self.getCartesianPosition(idA)
-                            posB = self.getCartesianPosition(idB) + numpy.dot([tx,ty,tz], self._lattice)
-                            dist = numpy.sqrt(numpy.sum( (posB-posA) * (posB-posA) ))
+                            posB = self.getCartesianPosition(idB) + numpy.dot([tx, ty, tz], self._lattice)
+                            dist = numpy.sqrt(numpy.sum((posB-posA) * (posB-posA)))
                             if(dist<maxdist):
-                                distances[idA][idB][(tx,ty,tz)] = dist
+                                distances[idA][idB][(tx, ty, tz)] = dist
         self._distances = distances
         return distances
 
@@ -446,7 +448,7 @@ class ChemicalEntity(list):
         for a in self:  a.lattice = value
         self._lattice = value
         return
-    lattice = property(_get_lattice, _set_lattice, doc =
+    lattice = property(_get_lattice, _set_lattice, doc=
         "Coordinate system for this Structure.")
 
     ####################################################################
@@ -474,15 +476,15 @@ class ChemicalEntity(list):
             attrname = "_" + a + "_cached"
             setattr(self, attrname, False)
 
-if __name__=='__main__':
+if __name__ == '__main__':
     m = Molecule()
-    print m
+    print(m)
     from Atom import Atom
-    o1 = Atom('O',[0.0, 0.0, 0.0])
-    print o1.xyz_cartn
-    h1 = Atom('H',[0.5, 0.0, 0.0])
-    h2 = Atom('H',[0.0, 0.5, 0.0])
-    m = Molecule([o1,h1,h2])
-    print m
+    o1 = Atom('O', [0.0, 0.0, 0.0])
+    print(o1.xyz_cartn)
+    h1 = Atom('H', [0.5, 0.0, 0.0])
+    h2 = Atom('H', [0.0, 0.5, 0.0])
+    m = Molecule([o1, h1, h2])
+    print(m)
 
 
