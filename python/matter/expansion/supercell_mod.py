@@ -1,3 +1,5 @@
+from __future__ import division
+
 ##############################################################################
 #
 # See AUTHORS.txt for a list of people who contributed.
@@ -33,13 +35,13 @@ def supercell(S, mno):
     # check arguments
     if len(mno) != 3:
         emsg = "Argument mno must contain 3 numbers."
-        raise ValueError, emsg
+        raise ValueError(emsg)
     elif min(mno) < 1:
         emsg = "Multipliers must be greater or equal 1"
-        raise ValueError, emsg
+        raise ValueError(emsg)
     if not isinstance(S, Structure):
         emsg = "The first argument must be a Structure instance."
-        raise TypeError, emsg
+        raise TypeError(emsg)
 
     # convert mno to a tuple of integers so it can be used as range limit.
     mno = (int(mno[0]), int(mno[1]), int(mno[2]))
@@ -50,7 +52,7 @@ def supercell(S, mno):
         return newS
 
     # back to business
-    ijklist = [(i,j,k)
+    ijklist = [(i, j, k)
                 for i in range(mno[0])
                     for j in range(mno[1])
                         for k in range(mno[2])]
@@ -71,7 +73,7 @@ def supercell(S, mno):
     newS.lattice.setLatPar(
             a=mno[0]*S.lattice.a,
             b=mno[1]*S.lattice.b,
-            c=mno[2]*S.lattice.c )
+            c=mno[2]*S.lattice.c)
     return newS
 
 # End of supercell

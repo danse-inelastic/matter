@@ -52,7 +52,7 @@ def makeCuboctahedron(S, dist):
 
     N = len(newS)
     j = N
-    for i in xrange(N):
+    for i in range(N):
 
         xyz = lat.cartesian(newS[N-1-i].xyz)
         if locate(xyz, c0) == 1:
