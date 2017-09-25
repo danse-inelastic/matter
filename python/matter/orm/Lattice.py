@@ -22,15 +22,15 @@ from ..Lattice import Lattice
 # dsaw.model inventory
 class Inventory(InvBase):
 
-    id = InvBase.d.str(name="id", max_length=64, constraints = 'PRIMARY KEY')
-    a = InvBase.d.float(name = 'a', default=1.0, validator=InvBase.v.positive)
-    b = InvBase.d.float(name = 'b', default=1.0, validator=InvBase.v.positive)
-    c = InvBase.d.float(name = 'c', default=1.0, validator=InvBase.v.positive)
-    alpha = InvBase.d.float(name = 'alpha', default=90.0, validator=InvBase.v.range(0,180,brackets='()'))
-    beta = InvBase.d.float(name = 'beta', default=90.0, validator=InvBase.v.range(0,180,brackets='()'))
-    gamma = InvBase.d.float(name = 'gamma', default=90.0, validator=InvBase.v.range(0,180,brackets='()'))
+    id = InvBase.d.str(name="id", max_length=64, constraints='PRIMARY KEY')
+    a = InvBase.d.float(name='a', default=1.0, validator=InvBase.v.positive)
+    b = InvBase.d.float(name='b', default=1.0, validator=InvBase.v.positive)
+    c = InvBase.d.float(name='c', default=1.0, validator=InvBase.v.positive)
+    alpha = InvBase.d.float(name='alpha', default=90.0, validator=InvBase.v.range(0, 180, brackets='()'))
+    beta = InvBase.d.float(name='beta', default=90.0, validator=InvBase.v.range(0, 180, brackets='()'))
+    gamma = InvBase.d.float(name='gamma', default=90.0, validator=InvBase.v.range(0, 180, brackets='()'))
 
-    base = InvBase.d.array(name='base', shape=(3,3), elementtype='float')
+    base = InvBase.d.array(name='base', shape=(3, 3), elementtype='float')
     
     dbtablename = 'lattices'
     
@@ -40,14 +40,14 @@ del Inventory
 #import numpy.linalg as la
 import numpy as np
 
-def aprEq(a,b):
-    if abs(a-b)<10**-7: return True
+def aprEq(a, b):
+    if abs(a-b) < 10**-7: return True
     else: return False
 
 def isUnitBase(testbase):
-    ub=np.array([[1.0,0,0],[0,1,0],[0,0,1]])
+    ub = np.array([[1.0, 0, 0], [0, 1, 0], [0, 0, 1]])
     diff = ub-np.array(testbase)
-    if aprEq(diff.all(),0.0): return True
+    if aprEq(diff.all(), 0.0): return True
     else: return False
 
 def __establishInventory__(self, inventory):
@@ -60,7 +60,7 @@ def __establishInventory__(self, inventory):
         inventory.gamma = self.gamma
     else:
         inventory.base = self.base
-    if hasattr(self,'id'):
+    if hasattr(self, 'id'):
         inventory.id = self.id
     return
 Lattice.__establishInventory__ = __establishInventory__

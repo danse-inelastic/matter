@@ -12,7 +12,7 @@
 #
 
 
-from dsaw.model.Inventory import Inventory as InvBase
+#from dsaw.model.Inventory import Inventory as InvBase
 
 
 # data object
@@ -26,12 +26,12 @@ from ..Structure import Structure
 from dsaw.model.Inventory import Inventory as InvBase
 class Inventory(InvBase):
 
-    id = InvBase.d.str(name="id", max_length=64, constraints = 'PRIMARY KEY')
+    id = InvBase.d.str(name="id", max_length=64, constraints='PRIMARY KEY')
     short_description = InvBase.d.str(
-        name = 'short_description', max_length = 256, default ="", label='Description')
-    lattice = InvBase.d.reference(name = 'lattice', targettype=Lattice, owned=True)
+        name='short_description', max_length=256, default="", label='Description')
+    lattice = InvBase.d.reference(name='lattice', targettype=Lattice, owned=True)
     atoms = InvBase.d.referenceSet(name='atoms', targettype=Atom, owned=True)
-    spacegroupno = InvBase.d.int(name = 'spacegroupno', default =1, label='Spacegroup #')
+    spacegroupno = InvBase.d.int(name='spacegroupno', default=1, label='Spacegroup #')
     chemical_formula = InvBase.d.str(name='chemical_formula', max_length=1024)
     primitive_unitcell = InvBase.d.reference(
         name='primitive_unitcell', targettype=UnitCell)#, owned=1)
@@ -50,7 +50,7 @@ def __establishInventory__(self, inventory):
     inventory.chemical_formula = self.getChemicalFormula()
     inventory.atoms = list(self) # the implementation of Structure class is that structure is inherited from list, and the items are atoms.
     #inventory.primitive_unitcell = self.primitive_unitcell
-    if hasattr(self,'id'):
+    if hasattr(self, 'id'):
         inventory.id = self.id
     return
 Structure.__establishInventory__ = __establishInventory__
