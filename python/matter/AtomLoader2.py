@@ -16,8 +16,8 @@ from AtomLoader2_wdr import *
 
 class AtomLoaderFrame(wx.Frame):
     def __init__(self, parent, id, title,
-        pos = wx.DefaultPosition, size = wx.DefaultSize,
-        style = wx.DEFAULT_FRAME_STYLE ):
+        pos=wx.DefaultPosition, size=wx.DefaultSize,
+        style=wx.DEFAULT_FRAME_STYLE):
         wx.Frame.__init__(self, parent, id, title, pos, size, style)
         
         self.CreateMyMenuBar()
@@ -37,17 +37,17 @@ class AtomLoaderFrame(wx.Frame):
     # WDR: methods for AtomLoaderFrame
     
     def CreateMyMenuBar(self):
-        self.SetMenuBar( MyMenuBarFunc() )
+        self.SetMenuBar(MyMenuBarFunc())
     
     def CreateMyToolBar(self):
-        tb = self.CreateToolBar(wx.TB_HORIZONTAL|wx.NO_BORDER)
-        MyToolBarFunc( tb )
+        tb = self.CreateToolBar(wx.TB_HORIZONTAL | wx.NO_BORDER)
+        MyToolBarFunc(tb)
     
     # WDR: handler implementations for AtomLoaderFrame
     
     def OnAbout(self, event):
         dialog = wx.MessageDialog(self, "Welcome to SuperApp 1.0\n(C)opyright Joe Hacker",
-            "About SuperApp", wx.OK|wx.ICON_INFORMATION )
+            "About SuperApp", wx.OK | wx.ICON_INFORMATION)
         dialog.CentreOnParent()
         dialog.ShowModal()
         dialog.Destroy()
@@ -65,7 +65,7 @@ class AtomLoader2(wx.App):
     
     def OnInit(self):
         wx.InitAllImageHandlers()
-        frame = AtomLoaderFrame( None, -1, "SuperApp", [20,20], [500,340] )
+        frame = AtomLoaderFrame(None, -1, "SuperApp", [20, 20], [500, 340])
         frame.Show(True)
         
         return True

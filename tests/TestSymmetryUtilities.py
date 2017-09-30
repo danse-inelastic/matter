@@ -1,3 +1,5 @@
+from __future__ import division
+
 ##############################################################################
 #
 # See AUTHORS.txt for a list of people who contributed.

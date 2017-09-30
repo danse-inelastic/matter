@@ -1,3 +1,5 @@
+from __future__ import print_function, division
+
 from properties import *
 import numpy
 from .Lattice import Lattice
@@ -21,20 +23,20 @@ class AtomPropertyCurator(type):
         else:
             type.__init__(name, bases, dict)
 
-        isotopeNumberProperties, inferredProperties, states = AtomPropertyCurator.collectProperties( AtomClass )
+        isotopeNumberProperties, inferredProperties, states = AtomPropertyCurator.collectProperties(AtomClass)
         properties = isotopeNumberProperties + inferredProperties + states
-        AtomClass.propertyNames = [ p.name for p in properties ]
+        AtomClass.propertyNames = [p.name for p in properties]
         
         propStr = '\n'.join(
-            [ "  %s: %s" % (p.name, p.doc) for p in properties ] )
+            ["  {0!s}: {1!s}".format((p.name, p.doc) for p in properties]))
 
         #global doc
         doc = """
         Here is a list of properties:
 
-        %s
+        {0!s}
 
-        """ % propStr
+        """.format(propStr)
 
         AtomClass.__doc__ += doc
         
@@ -42,7 +44,7 @@ class AtomPropertyCurator(type):
 
     #TODO: this needs to be rewritten to include diffraction's properties....or they need to be rewritten in inelastic format...either way, one should look at Paul's elements package first
     @staticmethod
-    def collectProperties( klass ):
+    def collectProperties(klass):
         ctorargs = []
         inferred = []
         states = []
@@ -52,8 +54,8 @@ class AtomPropertyCurator(type):
             State: states,
             }
         for item in klass.__dict__.values():
-            if not isinstance( item, Property ):continue
-            registry[ item.__class__ ].append( item )
+            if not isinstance(item, Property): continue
+            registry[item.__class__].append(item)
             continue
         return ctorargs, inferred, states
 
@@ -115,20 +117,20 @@ class Atom(object):
     TODO: We need to list all atomic properties here, and have a method to show
     what properties are available
     
-    >>> print Fe.scattering_length
+    >>> print(Fe.scattering_length)
     
     """
 
-    def __init__(self, atype='H', xyz=[0,0,0], mass=None, label='', 
+    def __init__(self, atype='H', xyz=[0, 0, 0], mass=None, label='', 
                  occupancy=1.0, charge=0.0, anisotropy=None, U=None, Uisoequiv=None, lattice=None):
         object.__init__(self)
         # declare non-singleton data members
-        self.xyz = [0,0,0] #this CANNOT be a numpy array or it breaks the cif reader!!!
+        self.xyz = [0, 0, 0] #this CANNOT be a numpy array or it breaks the cif reader!!!
         self.label = label
         self.charge = charge
         self.occupancy = occupancy
         self._anisotropy = None
-        self._U = numpy.zeros((3,3), dtype=float)
+        self._U = numpy.zeros((3, 3), dtype=float)
         self._Uisoequiv = 0.0
         self._Usynced = True
         self.lattice = None
@@ -154,8 +156,8 @@ class Atom(object):
 
 #    def __setattr__(self, name, value):
 #        if name not in Atom._setable:
-#            raise AttributeError, "Unknown attribute %s" % name
-#        return object.__setattr__(self, name, value)
+#            raise AttributeError("Unknown attribute {0!s}".format(name)
+#        return object.__setattr__(self, name, value))
         
     def initializeProperties(self, atype, mass):
         # if symbol is specified we should check that the symbol passed is a valid chemical element symbol
@@ -166,7 +168,7 @@ class Atom(object):
             if mass is None: mass = self.average_mass
             self.__dict__['mass'] = mass
         except KeyError:
-            #raise AttributeError, 'Invalid chemical element symbol.'
+            #raise AttributeError('Invalid chemical element symbol.')
             pass
 
 #    def __str__(self):
@@ -179,21 +181,19 @@ class Atom(object):
 #            l.append( ( prop, value ) )
 #            continue
 #
-#        rt = ','.join( ['%s=%s' % (name, value) for name,value in l ] )
+#        rt = ','.join( ['{0!s}={1!s}'.format(name, value) for name,value in l ] )
 #        return "Atom " + rt
     
 #    def __str__(self):
 #        """simple string representation"""
 #        xyz = self.xyz
-#        s = "%-4s %8.6f %8.6f %8.6f %6.4f" % \
-#                (self.symbol, xyz[0], xyz[1], xyz[2], self.occupancy)
+#        s = "{0:-4s} {1:8.6f} {2:8.6f} {3:8.6f} {4:6.4f}".format(self.symbol, xyz[0], xyz[1], xyz[2], self.occupancy)
 #        return s
       
     def __repr__(self):
         """simple string representation"""
         xyz = self.xyz
-        s = "%-4s %8.6f %8.6f %8.6f %6.4f" % \
-                (self.symbol, xyz[0], xyz[1], xyz[2], self.occupancy)
+        s = "{0:-4s} {1:8.6f} {2:8.6f} {3:8.6f} {4:6.4f}".format(self.symbol, xyz[0], xyz[1], xyz[2], self.occupancy)
         return s
     
     def __copy__(self):
@@ -222,15 +222,15 @@ class Atom(object):
             self.xyz[:] = value
         else:
             self.xyz = self.lattice.fractional(value)
-    xyz_cartn = property(_get_xyz_cartn, _set_xyz_cartn, doc =
+    xyz_cartn = property(_get_xyz_cartn, _set_xyz_cartn, doc=
         """absolute Cartesian coordinates of an atom
-        """ )
+        """)
     
     # anisotropy
 
     def _get_anisotropy(self):
         # determine when unknown
-        if self._anisotropy is None:
+        if self._anisotropy == None:
             Uisoequiv = self._get_Uisoequiv()
             # calculate isotropic tensor Uisoij
             lat = self.lattice or cartesian_lattice
@@ -254,9 +254,9 @@ class Atom(object):
         self._anisotropy = bool(value)
         return
 
-    anisotropy = property(_get_anisotropy, _set_anisotropy, doc =
+    anisotropy = property(_get_anisotropy, _set_anisotropy, doc=
         """flag for anisotropic thermal displacements.
-        """ )
+        """)
 
     # U
 
@@ -277,37 +277,37 @@ class Atom(object):
         self._U = numpy.array(value, dtype=float)
         return
 
-    U = property(_get_U, _set_U, doc =
+    U = property(_get_U, _set_U, doc=
         "anisotropic thermal displacement tensor.")
 
     # Uij elements
 
     def _get_Uij(self, i, j):
         Uij = self._get_U()
-        return Uij[i,j]
+        return Uij[i, j]
 
     def _set_Uij(self, i, j, value):
         self._anisotropy = None
-        self._U[i,j] = value
-        self._U[j,i] = value
+        self._U[i, j] = value
+        self._U[j, i] = value
 
     U11 = property(lambda self: self._get_Uij(0, 0),
-            lambda self, value: self._set_Uij(0, 0, value), doc =
+            lambda self, value: self._set_Uij(0, 0, value), doc=
             "U11 element of anisotropic displacement tensor")
     U22 = property(lambda self: self._get_Uij(1, 1),
-            lambda self, value: self._set_Uij(1, 1, value), doc =
+            lambda self, value: self._set_Uij(1, 1, value), doc=
             "U22 element of anisotropic displacement tensor")
     U33 = property(lambda self: self._get_Uij(2, 2),
-            lambda self, value: self._set_Uij(2, 2, value), doc =
+            lambda self, value: self._set_Uij(2, 2, value), doc=
             "U33 element of anisotropic displacement tensor")
     U12 = property(lambda self: self._get_Uij(0, 1),
-            lambda self, value: self._set_Uij(0, 1, value), doc =
+            lambda self, value: self._set_Uij(0, 1, value), doc=
             "U12 element of anisotropic displacement tensor")
     U13 = property(lambda self: self._get_Uij(0, 2),
-            lambda self, value: self._set_Uij(0, 2, value), doc =
+            lambda self, value: self._set_Uij(0, 2, value), doc=
             "U13 element of anisotropic displacement tensor")
     U23 = property(lambda self: self._get_Uij(1, 2),
-            lambda self, value: self._set_Uij(1, 2, value), doc =
+            lambda self, value: self._set_Uij(1, 2, value), doc=
             "U23 element of anisotropic displacement tensor")
 
     # Uisoequiv
@@ -316,15 +316,15 @@ class Atom(object):
         if self._anisotropy is None or self._anisotropy is True:
             lat = self.lattice or cartesian_lattice
             Uequiv = (
-                    self._U[0,0]*lat.ar*lat.ar*lat.a*lat.a +
-                    self._U[1,1]*lat.br*lat.br*lat.b*lat.b +
-                    self._U[2,2]*lat.cr*lat.cr*lat.c*lat.c +
-                    2*self._U[0,1]*lat.ar*lat.br*lat.a*lat.b*lat.cg +
-                    2*self._U[0,2]*lat.ar*lat.cr*lat.a*lat.c*lat.cb +
-                    2*self._U[1,2]*lat.br*lat.cr*lat.b*lat.c*lat.ca ) / 3.0
+                    self._U[0, 0]*lat.ar*lat.ar*lat.a*lat.a +
+                    self._U[1, 1]*lat.br*lat.br*lat.b*lat.b +
+                    self._U[2, 2]*lat.cr*lat.cr*lat.c*lat.c +
+                    2*self._U[0, 1]*lat.ar*lat.br*lat.a*lat.b*lat.cg +
+                    2*self._U[0, 2]*lat.ar*lat.cr*lat.a*lat.c*lat.cb +
+                    2*self._U[1, 2]*lat.br*lat.cr*lat.b*lat.c*lat.ca) / 3.0
             self._Uisoequiv = Uequiv
         else:
-            self._Uisoequiv = self._U[0,0]
+            self._Uisoequiv = self._U[0, 0]
         return self._Uisoequiv
 
     def _set_Uisoequiv(self, value):
@@ -344,28 +344,28 @@ class Atom(object):
             self._Uijsynced = True
         return
 
-    Uisoequiv = property(_get_Uisoequiv, _set_Uisoequiv, doc =
+    Uisoequiv = property(_get_Uisoequiv, _set_Uisoequiv, doc=
             "isotropic thermal displacement or equivalent value")
 
     # Bij elements
 
     B11 = property(lambda self: _UtoB*self._get_Uij(0, 0),
-            lambda self, value: self._set_Uij(0, 0, _BtoU*value), doc =
+            lambda self, value: self._set_Uij(0, 0, _BtoU*value), doc=
             "B11 element of Debye-Waler displacement tensor")
     B22 = property(lambda self: _UtoB*self._get_Uij(1, 1),
-            lambda self, value: self._set_Uij(1, 1, _BtoU*value), doc =
+            lambda self, value: self._set_Uij(1, 1, _BtoU*value), doc=
             "B22 element of Debye-Waler displacement tensor")
     B33 = property(lambda self: _UtoB*self._get_Uij(2, 2),
-            lambda self, value: self._set_Uij(2, 2, _BtoU*value), doc =
+            lambda self, value: self._set_Uij(2, 2, _BtoU*value), doc=
             "B33 element of Debye-Waler displacement tensor")
     B12 = property(lambda self: _UtoB*self._get_Uij(0, 1),
-            lambda self, value: self._set_Uij(0, 1, _BtoU*value), doc =
+            lambda self, value: self._set_Uij(0, 1, _BtoU*value), doc=
             "B12 element of Debye-Waler displacement tensor")
     B13 = property(lambda self: _UtoB*self._get_Uij(0, 2),
-            lambda self, value: self._set_Uij(0, 2, _BtoU*value), doc =
+            lambda self, value: self._set_Uij(0, 2, _BtoU*value), doc=
             "B13 element of Debye-Waler displacement tensor")
     B23 = property(lambda self: _UtoB*self._get_Uij(1, 2),
-            lambda self, value: self._set_Uij(1, 2, _BtoU*value), doc =
+            lambda self, value: self._set_Uij(1, 2, _BtoU*value), doc=
             "B23 element of Debye-Waler displacement tensor")
 
     # Bisoequiv
@@ -376,31 +376,31 @@ class Atom(object):
     def _set_Bisoequiv(self, value):
         self._set_Uisoequiv(_BtoU*value)
 
-    Bisoequiv = property(_get_Bisoequiv, _set_Bisoequiv, doc =
+    Bisoequiv = property(_get_Bisoequiv, _set_Bisoequiv, doc=
             "Debye-Waler isotropic thermal displacement or equivalent value")
     
     
     # inelastic group properties 
     
     # Z and mass
-    Z = CtorArg( 'Z', 'atomic number' )
-    symbol = CtorArg( 'symbol', 'chemical symbol' )
-    mass = CtorArg( 'mass', 'atomic mass number' )
+    Z = CtorArg('Z', 'atomic number')
+    symbol = CtorArg('symbol', 'chemical symbol')
+    mass = CtorArg('mass', 'atomic mass number')
 
 
     # read-only, inferred properties
     import atomic_properties
     from utils import getModules
-    modules = getModules( atomic_properties )
+    modules = getModules(atomic_properties)
     del getModules, atomic_properties
 
     for module in modules:
-        name = module.__name__.split( '.' )[-1]
+        name = module.__name__.split('.')[-1]
         doc = module.__doc__
         lookup = module.lookup
-        #print name, lookup
-        cmd = "%s=InferredProperty( name, doc, lookup )" % name
-        exec cmd
+        #print(name, lookup)
+        cmd = "{0!s}=InferredProperty( name, doc, lookup )".format(name)
+        exec(cmd)
         del name, doc, lookup, module, cmd
         continue
     del modules
