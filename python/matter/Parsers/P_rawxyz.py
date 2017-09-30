@@ -58,39 +58,38 @@ class P_rawxyz(StructureParser):
             return stru
         # here we have at least one valid record line
         # figure out xyz layout from the first line for plain and raw formats
-        floatfields = [ isfloat(f) for f in linefields[start] ]
+        floatfields = [isfloat(f) for f in linefields[start]]
         nfields = len(linefields[start])
         if nfields not in (3, 4):
-            emsg = ("%d: invalid RAWXYZ format, expected 3 or 4 columns" %
-                    (start + 1))
+            emsg = ("{0!d}: invalid RAWXYZ format, expected 3 or 4 columns".format(start + 1))
             raise StructureFormatError(emsg)
         if floatfields[:3] == [True, True, True]:
             el_idx, x_idx = (None, 0)
         elif floatfields[:4] == [False, True, True, True]:
             el_idx, x_idx = (0, 1)
         else:
-            emsg = "%d: invalid RAWXYZ format" % (start + 1)
+            emsg = "{0!d}: invalid RAWXYZ format".format(start + 1)
             raise StructureFormatError(emsg)
         # now try to read all record lines
         try:
             p_nl = start
-            for fields in linefields[start:] :
+            for fields in linefields[start:]:
                 p_nl += 1
                 if fields == []:
                     continue
                 elif len(fields) != nfields:
-                    emsg = ('%d: all lines must have ' +
-                            'the same number of columns') % p_nl
-                    raise StructureFormatError, emsg
+                    emsg = ('{0!d}: all lines must have ' +
+                            'the same number of columns').format(p_nl)
+                    raise StructureFormatError(emsg)
                 symbol = el_idx is not None and fields[el_idx] or ""
-                xyz = [ float(f) for f in fields[x_idx:x_idx+3] ]
+                xyz = [float(f) for f in fields[x_idx:x_idx+3]]
                 if len(xyz) == 2:
                     xyz.append(0.0)
                 stru.addNewAtom(symbol, xyz=xyz)
         except ValueError:
-            emsg = "%d: invalid number" % p_nl
+            emsg = "{0!d}: invalid number".format(p_nl)
             exc_type, exc_value, exc_traceback = sys.exc_info()
-            raise StructureFormatError, emsg, exc_traceback
+            raise StructureFormatError(emsg, exc_traceback)
         return stru
     # End of parseLines
 
@@ -102,7 +101,7 @@ class P_rawxyz(StructureParser):
         lines = []
         for a in stru:
             rc = a.xyz_cartn
-            s = "%s %g %g %g" % (a.symbol, rc[0], rc[1], rc[2])
+            s = "{0!s} {1:g} {2:g} {3:g}".format(a.symbol, rc[0], rc[1], rc[2])
             lines.append(s.lstrip())
         return lines
     # End of toLines

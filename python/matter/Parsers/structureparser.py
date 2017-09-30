@@ -29,8 +29,7 @@ class StructureParser:
         Return Structure object or raise StructureFormatError exception.
         This method has to be overloaded in derived class.
         """
-        raise NotImplementedError, \
-                "parseLines not defined for '%s' format" % self.format
+        raise NotImplementedError("parseLines not defined for '{0!s}' format".format(self.format))
         return
 
     def toLines(self, stru, **kwds):
@@ -39,8 +38,7 @@ class StructureParser:
 
         Return list of strings.
         """
-        raise NotImplementedError, \
-                "toLines not defined for '%s' format" % self.format
+        raise NotImplementedError("toLines not defined for '{0!s}' format".format(self.format))
 
     def parse(self, s):
         """Create Structure instance from a string.
@@ -54,9 +52,9 @@ class StructureParser:
     def tostring(self, stru, **kwds):
         """Convert Structure instance to a string.
         """
-        lines = self.toLines(stru,**kwds)
-        stringformat=kwds.get('stringformat','normal')
-        if stringformat=='raw':
+        lines = self.toLines(stru, **kwds)
+        stringformat = kwds.get('stringformat', 'normal')
+        if stringformat == 'raw':
             s = r'\n'.join(lines) + r'\n'
         else:
             s = '\n'.join(lines) + '\n'

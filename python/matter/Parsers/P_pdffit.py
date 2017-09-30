@@ -43,7 +43,7 @@ class P_pdffit(StructureParser):
             stru = self.stru
             cell_line_read = False
             stop = len(lines)
-            while stop>0 and lines[stop-1].strip() == "":
+            while stop > 0 and lines[stop-1].strip() == "":
                 stop -= 1
             ilines = iter(lines[:stop])
             # read header of PDFFit file
@@ -58,7 +58,7 @@ class P_pdffit(StructureParser):
                     stru.pdffit['scale'] = float(words[1])
                 elif words[0] == 'sharp':
                     l1 = l.replace(',', ' ')
-                    sharp_pars = [ float(w) for w in l1.split()[1:] ]
+                    sharp_pars = [float(w) for w in l1.split()[1:]]
                     if len(sharp_pars) < 4:
                         stru.pdffit['delta2'] = sharp_pars[0]
                         stru.pdffit['sratio'] = sharp_pars[1]
@@ -78,17 +78,17 @@ class P_pdffit(StructureParser):
                 elif words[0] == 'cell':
                     cell_line_read = True
                     l1 = l.replace(',', ' ')
-                    latpars = [ float(w) for w in l1.split()[1:7] ]
+                    latpars = [float(w) for w in l1.split()[1:7]]
                     stru.lattice = Lattice(*latpars)
                 elif words[0] == 'dcell':
                     l1 = l.replace(',', ' ')
-                    stru.pdffit['dcell'] = [ float(w) for w in l1.split()[1:7] ]
+                    stru.pdffit['dcell'] = [float(w) for w in l1.split()[1:7]]
                 elif words[0] == 'ncell':
                     l1 = l.replace(',', ' ')
-                    stru.pdffit['ncell'] = [ int(w) for w in l1.split()[1:5] ]
+                    stru.pdffit['ncell'] = [int(w) for w in l1.split()[1:5]]
                 elif words[0] == 'format':
                     if words[1] != 'pdffit':
-                        emsg = "%d: file is not in PDFfit format" % p_nl
+                        emsg = "{0!d}: file is not in PDFfit format".format(p_nl)
                         raise StructureFormatError(emsg)
                 elif words[0] == 'atoms' and cell_line_read:
                     break
@@ -96,22 +96,22 @@ class P_pdffit(StructureParser):
                     self.ignored_lines.append(l)
             # Header reading finished, check if required lines were present.
             if not cell_line_read:
-                emsg = "%d: file is not in PDFfit format" % p_nl
+                emsg = "{0!d}: file is not in PDFfit format".format(p_nl)
                 raise StructureFormatError(emsg)
             # Load data from atom entries.
-            p_natoms = reduce(lambda x,y : x*y, stru.pdffit['ncell'])
+            p_natoms = reduce(lambda x, y: x*y, stru.pdffit['ncell'])
             # we are now inside data block
             for l in ilines:
                 p_nl += 1
                 wl1 = l.split()
                 element = wl1[0][0].upper() + wl1[0][1:].lower()
-                xyz = [ float(w) for w in wl1[1:4] ]
+                xyz = [float(w) for w in wl1[1:4]]
                 occ = float(wl1[4])
                 stru.addNewAtom(element, xyz=xyz, occupancy=occ)
                 a = stru.getLastAtom()
                 p_nl += 1
                 wl2 = ilines.next().split()
-                a.sigxyz = [ float(w) for w in wl2[0:3] ]
+                a.sigxyz = [float(w) for w in wl2[0:3]]
                 a.sigo = float(wl2[3])
                 p_nl += 1
                 wl3 = ilines.next().split()
@@ -121,32 +121,32 @@ class P_pdffit(StructureParser):
                 wl5 = ilines.next().split()
                 p_nl += 1
                 wl6 = ilines.next().split()
-                a.sigU = numpy.zeros((3,3), dtype=float)
+                a.sigU = numpy.zeros((3, 3), dtype=float)
                 a.U11 = float(wl3[0])
                 a.U22 = float(wl3[1])
                 a.U33 = float(wl3[2])
-                a.sigU[0,0] = float(wl4[0])
-                a.sigU[1,1] = float(wl4[1])
-                a.sigU[2,2] = float(wl4[2])
+                a.sigU[0, 0] = float(wl4[0])
+                a.sigU[1, 1] = float(wl4[1])
+                a.sigU[2, 2] = float(wl4[2])
                 a.U12 = float(wl5[0])
                 a.U13 = float(wl5[1])
                 a.U23 = float(wl5[2])
-                a.sigU[0,1] = a.sigU[1,0] = float(wl6[0])
-                a.sigU[0,2] = a.sigU[2,0] = float(wl6[1])
-                a.sigU[1,2] = a.sigU[2,1] = float(wl6[2])
+                a.sigU[0, 1] = a.sigU[1, 0] = float(wl6[0])
+                a.sigU[0, 2] = a.sigU[2, 0] = float(wl6[1])
+                a.sigU[1, 2] = a.sigU[2, 1] = float(wl6[2])
             if len(stru) != p_natoms:
-                emsg = "expected %d atoms, read %d" % (p_natoms, len(stru))
+                emsg = "expected {0!d} atoms, read {1!d}".format(p_natoms, len(stru))
                 raise StructureFormatError(emsg)
-            if stru.pdffit['ncell'][:3] != [1,1,1]:
-                superlatpars = [ latpars[i]*stru.pdffit['ncell'][i]
-                                 for i in range(3) ] + latpars[3:]
+            if stru.pdffit['ncell'][:3] != [1, 1, 1]:
+                superlatpars = [latpars[i]*stru.pdffit['ncell'][i]
+                                 for i in range(3)] + latpars[3:]
                 superlattice = Lattice(*superlatpars)
                 stru.placeInLattice(superlattice)
                 stru.pdffit['ncell'] = [1, 1, 1, p_natoms]
         except (ValueError, IndexError):
-            emsg = "%d: file is not in PDFfit format" % p_nl
+            emsg = "{0!d}: file is not in PDFfit format".format(p_nl)
             exc_type, exc_value, exc_traceback = sys.exc_info()
-            raise StructureFormatError, emsg, exc_traceback
+            raise StructureFormatError(emsg, exc_traceback)
         return stru
 
     # End of parseLines
@@ -167,47 +167,45 @@ class P_pdffit(StructureParser):
         # default values of standard deviations
         d_sigxyz = numpy.zeros(3, dtype=float)
         d_sigo = 0.0
-        d_sigU = numpy.zeros((3,3), dtype=float)
+        d_sigU = numpy.zeros((3, 3), dtype=float)
         # here we can start
         l = "title  " + stru.description
-        lines.append( l.strip() )
-        lines.append( "format pdffit" )
-        lines.append( "scale  %9.6f" % stru.pdffit["scale"] )
-        lines.append( "sharp  %9.6f, %9.6f, %9.6f, %9.6f" % (
+        lines.append(l.strip())
+        lines.append("format pdffit")
+        lines.append("scale  {0:9.6f}".format(stru.pdffit["scale"]))
+        lines.append("sharp  {0:9.6f}, {1:9.6f}, {2:9.6f}, {3:9.6f}".format(
             stru.pdffit["delta2"],
             stru.pdffit["delta1"],
             stru.pdffit["sratio"],
-            stru.pdffit["rcut"]) )
-        lines.append( "spcgr   " + stru.pdffit["spcgr"] )
+            stru.pdffit["rcut"]))
+        lines.append("spcgr   " + stru.pdffit["spcgr"])
         if stru.pdffit.get('spdiameter', 0.0) > 0.0:
-            line = 'shape   sphere, %g' % stru.pdffit['spdiameter']
+            line = 'shape   sphere, {0!g}'.format(stru.pdffit['spdiameter'])
             lines.append(line)
         if stru.pdffit.get('stepcut', 0.0) > 0.0:
-            line = 'shape   stepcut, %g' % stru.pdffit['stepcut']
+            line = 'shape   stepcut, {0!g}'.format(stru.pdffit['stepcut'])
             lines.append(line)
         lat = stru.lattice
-        lines.append( "cell   %9.6f, %9.6f, %9.6f, %9.6f, %9.6f, %9.6f" % (
-            lat.a, lat.b, lat.c, lat.alpha, lat.beta, lat.gamma) )
-        lines.append( "dcell  %9.6f, %9.6f, %9.6f, %9.6f, %9.6f, %9.6f" %
-            tuple(stru.pdffit["dcell"]) )
-        lines.append( "ncell  %9i, %9i, %9i, %9i" % (1, 1, 1, len(stru)) )
-        lines.append( "atoms" )
+        lines.append("cell   {0:9.6f}, {1:9.6f}, {2:9.6f}, {3:9.6f}, {4:9.6f}, {5:9.6f}".format(
+            lat.a, lat.b, lat.c, lat.alpha, lat.beta, lat.gamma))
+        lines.append("dcell  {0:9.6f}, {1:9.6f}, {2:9.6f}, {3:9.6f}, {4:9.6f}, {5:9.6f}".format(tuple(stru.pdffit["dcell"])))
+        lines.append("ncell  {0:9i}, {1:9i}, {2:9i}, {3:9i}".format(1, 1, 1, len(stru)))
+        lines.append("atoms")
         for a in stru:
             ad = a.__dict__
-            lines.append( "%-4s %17.8f %17.8f %17.8f %12.4f" % (
-                a.element.upper(), a.xyz[0], a.xyz[1], a.xyz[2], a.occupancy) )
+            lines.append("{0:-4s} {1:17.8f} {2:17.8f} {3:17.8f} {4:12.4f}".format(a.element.upper(), a.xyz[0], a.xyz[1], a.xyz[2], a.occupancy))
             sigmas = numpy.concatenate(
-                ( ad.get("sigxyz", d_sigxyz),  [ad.get("sigo", d_sigo)] )  )
-            lines.append( "    %18.8f %17.8f %17.8f %12.4f" % tuple(sigmas) )
+                (ad.get("sigxyz", d_sigxyz),  [ad.get("sigo", d_sigo)]))
+            lines.append("    {0:18.8f} {1:17.8f} {2:17.8f} {3:12.4f}".format(tuple(sigmas)))
             sigU = ad.get("sigU", d_sigU)
-            Uii = ( a.U[0][0], a.U[1][1], a.U[2][2] )
-            Uij = ( a.U[0][1], a.U[0][2], a.U[1][2] )
-            sigUii = ( sigU[0][0], sigU[1][1], sigU[2][2] )
-            sigUij = ( sigU[0][1], sigU[0][2], sigU[1][2] )
-            lines.append( "    %18.8f %17.8f %17.8f" % Uii )
-            lines.append( "    %18.8f %17.8f %17.8f" % sigUii )
-            lines.append( "    %18.8f %17.8f %17.8f" % Uij )
-            lines.append( "    %18.8f %17.8f %17.8f" % sigUij )
+            Uii = (a.U[0][0], a.U[1][1], a.U[2][2])
+            Uij = (a.U[0][1], a.U[0][2], a.U[1][2])
+            sigUii = (sigU[0][0], sigU[1][1], sigU[2][2])
+            sigUij = (sigU[0][1], sigU[0][2], sigU[1][2])
+            lines.append("    {0:18.8f} {1:17.8f} {2:17.8f}".format(Uii))
+            lines.append("    {0:18.8f} {1:17.8f} {2:17.8f}".format(sigUii))
+            lines.append("    {0:18.8f} {1:17.8f} {2:17.8f}".format(Uij))
+            lines.append("    {0:18.8f} {1:17.8f} {2:17.8f}".format(sigUij))
         return lines
 
     # End of toLines
@@ -233,8 +231,8 @@ class P_pdffit(StructureParser):
         elif shapetype == 'stepcut':
             self.stru.pdffit['stepcut'] = float(words[2])
         else:
-            emsg = 'Invalid type of particle shape correction %r' % shapetype
-            raise StructureFormatError, emsg
+            emsg = 'Invalid type of particle shape correction {0!r}'.format(shapetype)
+            raise StructureFormatError(emsg)
         return
 
 

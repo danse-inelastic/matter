@@ -1,3 +1,5 @@
+from __future__ import print_function
+
 ##############################################################################
 #
 # Structure         by DANSE Diffraction group
@@ -68,14 +70,12 @@ class P_xyz(StructureParser):
                     stru.description = lines[start+1].strip()
                 start += 2
             else:
-                emsg = ("%d: invalid XYZ format, missing number of atoms" %
-                        (start + 1))
+                emsg = ("{0!d}: invalid XYZ format, missing number of atoms".format(start + 1))
                 raise StructureFormatError(emsg)
         except (IndexError, ValueError):
             exc_type, exc_value, exc_traceback = sys.exc_info()
-            emsg = ("%d: invalid XYZ format, missing number of atoms" %
-                    (start + 1))
-            raise StructureFormatError, emsg, exc_traceback
+            emsg = ("{0!d}: invalid XYZ format, missing number of atoms".format(start + 1))
+            raise StructureFormatError(emsg, exc_traceback)
         # find the last valid record
         stop = len(lines)
         while stop > start and len(linefields[stop-1]) == 0:
@@ -86,34 +86,34 @@ class P_xyz(StructureParser):
         # here we have at least one valid record line
         nfields = len(linefields[start])
         if nfields != 4 and nfields != 5:
-            emsg = "%d: invalid XYZ format, expected 4 or 5 columns" % (start + 1)
+            emsg = "{0!d}: invalid XYZ format, expected 4 or 5 columns".format(start + 1)
             raise StructureFormatError(emsg)
         # now try to read all record lines
         try:
             p_nl = start
-            for fields in linefields[start:] :
+            for fields in linefields[start:]:
                 p_nl += 1
                 if fields == []:
                     continue
-                elif len(fields) != 4 and len(fields) !=5:
-                    emsg = ('%d: all lines must have ' +
-                            'a symbol, position, and optionally charge') % p_nl
+                elif len(fields) != 4 and len(fields) != 5:
+                    emsg = ('{0!d}: all lines must have ' +
+                            'a symbol, position, and optionally charge').format(p_nl)
                     raise StructureFormatError(emsg)
                 symbol = fields[0]
                 symbol = symbol[0].upper() + symbol[1:].lower()
-                xyz = [ float(f) for f in fields[1:4] ]                 
-                if len(fields)==5:
+                xyz = [float(f) for f in fields[1:4]] 
+                if len(fields) == 5:
                     charge = float(fields[4])
                 else:
                     charge = 0.0
                 stru.addNewAtom(symbol, xyz=xyz, charge=charge)
         except ValueError:
             exc_type, exc_value, exc_traceback = sys.exc_info()
-            emsg = "%d: invalid number format" % p_nl
-            raise StructureFormatError, emsg, exc_traceback
+            emsg = "{0!d}: invalid number format".format(p_nl)
+            raise StructureFormatError(emsg, exc_traceback)
         # finally check if all the atoms have been read
         if p_natoms is not None and len(stru) != p_natoms:
-            emsg = "expected %d atoms, read %d" % (p_natoms, len(stru))
+            emsg = "expected {0!d} atoms, read {1!d}".format(p_natoms, len(stru))
             raise StructureFormatError(emsg)
         if needsDescription:
             stru.generateDescription()
@@ -135,7 +135,7 @@ class P_xyz(StructureParser):
         puc = stru.primitive_unitcell
         atoms = puc.atoms
         lines = []
-        lines.append( str(len(atoms)) )
+        lines.append(str(len(atoms)))
         #this next part puts the lattice vectors as the "description"
         if kwds.get('latticeAsDescription'):
             import numpy as np
@@ -143,7 +143,7 @@ class P_xyz(StructureParser):
             base = np.array(lattice.base, copy=1); base.shape = -1
             lines.append(' '.join(map(str, base)))
         elif stru.description:
-            lines.append( stru.description )
+            lines.append(stru.description)
         else:
             lines.append('\n')
         for a in atoms:
@@ -151,14 +151,14 @@ class P_xyz(StructureParser):
                 rc = a.xyz
             else:
                 rc = a.xyz_cartn
-            s = "%-3s %g %g %g" % (a.symbol, rc[0], rc[1], rc[2])
+            s = "{0:-3s} {1:g} {2:g} {3:g}".format(a.symbol, rc[0], rc[1], rc[2])
             lines.append(s)
         return lines
 
     def _toLines_originalunitcell(self, stru, **kwds):
         use_fractional_coordinates = kwds.get('use_fractional_coordinates')
         lines = []
-        lines.append( str(len(stru)) )
+        lines.append(str(len(stru)))
         #this next part puts the lattice vectors as the "description"
         if kwds.get('latticeAsDescription'):
             import numpy as np
@@ -166,7 +166,7 @@ class P_xyz(StructureParser):
             base = np.array(lattice.base, copy=1); base.shape = -1
             lines.append(' '.join(map(str, base)))
         elif stru.description:
-            lines.append( stru.description )
+            lines.append(stru.description)
         else:
             lines.append('\n')
         for a in stru:
@@ -174,7 +174,7 @@ class P_xyz(StructureParser):
                 rc = a.xyz
             else:
                 rc = a.xyz_cartn
-            s = "%-3s %g %g %g" % (a.symbol, rc[0], rc[1], rc[2])
+            s = "{0:-3s} {1:g} {2:g} {3:g}".format(a.symbol, rc[0], rc[1], rc[2])
             lines.append(s)
         return lines
     # End of toLines
@@ -195,21 +195,21 @@ class TestCase(unittest.TestCase):
         p = getParser()
         from danse.ins import matter
         a = 1.5
-        lattice = matter.Lattice(2*a, 2*a, 2*a, 90,90,90)
-        atoms = [matter.Atom('Ni'), matter.Atom('Ni', (0.5,0.5,0.5))]
+        lattice = matter.Lattice(2*a, 2*a, 2*a, 90, 90, 90)
+        atoms = [matter.Atom('Ni'), matter.Atom('Ni', (0.5, 0.5, 0.5))]
         struct = Structure(lattice=lattice, atoms=atoms, sgid=229)
         
-        print 'original unitcell, cartesian coords'
-        print '\n'.join(p.toLines(struct))
+        print('original unitcell, cartesian coords')
+        print('\n'.join(p.toLines(struct)))
         
-        print 'original unitcell, fractional coords'
-        print '\n'.join(p.toLines(struct, use_fractional_coordinates=1))
+        print('original unitcell, fractional coords')
+        print('\n'.join(p.toLines(struct, use_fractional_coordinates=1)))
 
-        print 'primitive unitcell, cartesian coords'
-        print '\n'.join(p.toLines(struct, use_primitive_unitcell=1))
+        print('primitive unitcell, cartesian coords')
+        print('\n'.join(p.toLines(struct, use_primitive_unitcell=1)))
 
-        print 'primitive unitcell, fractional coords'
-        print '\n'.join(p.toLines(struct, use_primitive_unitcell=1, use_fractional_coordinates=1))
+        print('primitive unitcell, fractional coords')
+        print('\n'.join(p.toLines(struct, use_primitive_unitcell=1, use_fractional_coordinates=1)))
 
         return
 

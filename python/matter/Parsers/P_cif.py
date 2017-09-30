@@ -1,3 +1,5 @@
+from __future__ import print_function, division
+
 ##############################################################################
 #
 # See AUTHORS.txt for a list of people who contributed.
@@ -101,10 +103,10 @@ class P_cif(StructureParser):
 
     def _tr_atom_site_type_symbol(a, value):
         rx = P_cif._psymb.match(value)
-#        print rx.group(0)
-#        print rx.group(1)
-#        print rx.group(2)
-#        print rx.group(3)
+#        print(rx.group(0))
+#        print(rx.group(1))
+#        print(rx.group(2))
+#        print(rx.group(3))
         # this line makes no sense
         #smbl = rx and rx.group(0) or value
         smbl = rx.group(2)
@@ -284,11 +286,11 @@ class P_cif(StructureParser):
             for blockname, ignore in self.ciffile.items():
                 self._parseCifBlock(blockname)
                 # stop after reading the first structure
-                if self.stru:   break
-        except (StarError, ValueError, IndexError), err:
+                if self.stru: break
+        except (StarError, ValueError, IndexError) as err:
             exc_type, exc_value, exc_traceback = sys.exc_info()
             emsg = str(err).strip()
-            raise StructureFormatError, emsg, exc_traceback
+            raise StructureFormatError(emsg, exc_traceback)
         # all good here
         return self.stru
 
@@ -302,7 +304,7 @@ class P_cif(StructureParser):
         No return value.
         """
         block = self.ciffile[blockname]
-        if not block.has_key('_atom_site_label'):   return
+        if not ('_atom_site_label' in block): return
         # here block contains structure, initialize output data
         self.stru = Structure()
         self.labelindex.clear()
@@ -321,7 +323,7 @@ class P_cif(StructureParser):
 
         No return value.
         """
-        if not block.has_key('_cell_length_a'): return
+        if not ('_cell_length_a' in block): return
         # obtain lattice parameters
         try:
             latpars = (
@@ -332,10 +334,10 @@ class P_cif(StructureParser):
                 leading_float(block['_cell_angle_beta']),
                 leading_float(block['_cell_angle_gamma']),
             )
-        except KeyError, err:
+        except KeyError as err:
             exc_type, exc_value, exc_traceback = sys.exc_info()
             emsg = str(err)
-            raise StructureFormatError, emsg, exc_traceback
+            raise StructureFormatError(emsg, exc_traceback)
         self.stru.lattice = Lattice(*latpars)
         return
 
@@ -373,7 +375,7 @@ class P_cif(StructureParser):
             except:
                 raise "cannot find atom symbol"
         # removes trailing numbers, +/- symbols, etc.
-        symLength = min(len(atomSiteType),2)
+        symLength = min(len(atomSiteType), 2)
         firstTwo = atomSiteType[:symLength]
         uppers = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
         lowers = 'abcdefghijklmnopqrstuvwxyz'
@@ -392,7 +394,7 @@ class P_cif(StructureParser):
 
         No return value.
         """
-        if not block.has_key('_atom_site_aniso_label'): return
+        if not ('_atom_site_aniso_label' in block): return
         # something to do here:
         adp_loop = block.GetLoop('_atom_site_aniso_label')
         # get a dictionary which maps properties to atom setters
@@ -419,8 +421,8 @@ class P_cif(StructureParser):
         self.asymmetric_unit = list(self.stru)
         sym_synonyms = ('_space_group_symop_operation_xyz',
                         '_symmetry_equiv_pos_as_xyz')
-        sym_loop_name = [n for n in sym_synonyms if block.has_key(n)]
-        if not sym_loop_name:   return
+        sym_loop_name = [n for n in sym_synonyms if n in block]
+        if not sym_loop_name: return
         # sym_loop exists here and we know its cif name
         sym_loop_name = sym_loop_name[0]
         sym_loop = block.GetLoop(sym_loop_name)
@@ -457,7 +459,7 @@ class P_cif(StructureParser):
             new_crystal_system = (
                     block.get('_space_group_crystal_system') or
                     block.get('_symmetry_cell_setting') or
-                    'MONOCLINIC' ).upper()
+                    'MONOCLINIC').upper()
             self.spacegroup = SpaceGroup(
                     short_name=new_short_name,
                     crystal_system=new_crystal_system,
@@ -478,7 +480,7 @@ class P_cif(StructureParser):
         corepos = [a.xyz for a in self.stru]
         coreUijs = [a.U for a in self.stru]
         # we need a large tolerance because cif files generally only have 4 decimal places
-        self.eau = ExpandAsymmetricUnit(self.spacegroup, corepos, coreUijs, eps = 0.001)
+        self.eau = ExpandAsymmetricUnit(self.spacegroup, corepos, coreUijs, eps=0.001)
         # build a nested list of new atoms:
         newatoms = []
         for i, ca in enumerate(self.stru):
@@ -510,36 +512,36 @@ class P_cif(StructureParser):
         # for now, we can add the title as a comment
         if stru.title.strip() != "":
             title_lines = stru.title.split('\n')
-            lines.extend([ "# " + line.strip() for line in title_lines ])
+            lines.extend(["# " + line.strip() for line in title_lines])
             lines.append("")
         lines.append("data_3D")
-        iso_date =  "%04i-%02i-%02i" % time.gmtime()[:3]
+        iso_date = "{0:04i}-{1:02i}-{2:02i}".format(time.gmtime()[:3])
         lines.extend([
-            "%-31s %s" % ("_audit_creation_date", iso_date),
-            "%-31s %s" % ("_audit_creation_method", "P_cif.py"),
+            "{0:-31s} {1!s}".format("_audit_creation_date", iso_date),
+            "{0:-31s} {1!s}".format("_audit_creation_method", "P_cif.py"),
             "",
-            "%-31s %s" % ("_symmetry_space_group_name_H-M", "'P1'"),
-            "%-31s %s" % ("_symmetry_Int_Tables_number", "1"),
-            "%-31s %s" % ("_symmetry_cell_setting", "triclinic"),
-            "" ])
+            "{0:-31s} {1!s}".format("_symmetry_space_group_name_H-M", "'P1'"),
+            "{0:-31s} {1!s}".format("_symmetry_Int_Tables_number", "1"),
+            "{0:-31s} {1!s}".format("_symmetry_cell_setting", "triclinic"),
+            ""])
         # there should be no need to specify equivalent positions for P1
         # _symmetry_equiv_posi_as_xyz x,y,z
         lines.extend([
-            "%-31s %.6g" % ("_cell_length_a", stru.lattice.a),
-            "%-31s %.6g" % ("_cell_length_b", stru.lattice.b),
-            "%-31s %.6g" % ("_cell_length_c", stru.lattice.c),
-            "%-31s %.6g" % ("_cell_angle_alpha", stru.lattice.alpha),
-            "%-31s %.6g" % ("_cell_angle_beta", stru.lattice.beta),
-            "%-31s %.6g" % ("_cell_angle_gamma", stru.lattice.gamma),
-            "" ])
+            "{0:-31s} {1:.6g}".format("_cell_length_a", stru.lattice.a),
+            "{0:-31s} {1:.6g}".format("_cell_length_b", stru.lattice.b),
+            "{0:-31s} {1:.6g}".format("_cell_length_c", stru.lattice.c),
+            "{0:-31s} {1:.6g}".format("_cell_angle_alpha", stru.lattice.alpha),
+            "{0:-31s} {1:.6g}".format("_cell_angle_beta", stru.lattice.beta),
+            "{0:-31s} {1:.6g}".format("_cell_angle_gamma", stru.lattice.gamma),
+            ""])
         # build a list of site labels and adp (displacement factor) types
         element_count = {}
         a_site_label = []
         a_adp_type = []
         for a in stru:
-            cnt = element_count[a.symbol] = element_count.get(a.symbol,0)+1
-            a_site_label.append( "%s%i" % (a.symbol, cnt) )
-            if numpy.all(a.U == a.U[0,0]*numpy.identity(3)):
+            cnt = element_count[a.symbol] = element_count.get(a.symbol, 0)+1
+            a_site_label.append("{0!s}{1!i}".format(a.symbol, cnt))
+            if numpy.all(a.U == a.U[0, 0]*numpy.identity(3)):
                 a_adp_type.append("Uiso")
             else:
                 a_adp_type.append("Uani")
@@ -553,15 +555,14 @@ class P_cif(StructureParser):
             "  _atom_site_fract_z",
             "  _atom_site_U_iso_or_equiv",
             "  _atom_site_adp_type",
-            "  _atom_site_occupancy" ])
+            "  _atom_site_occupancy"])
         for i in range(len(stru)):
             a = stru[i]
-            line = "  %-5s %-3s %11.6f %11.6f %11.6f %11.6f %-5s %.4f" % (
-                    a_site_label[i], a.symbol, a.xyz[0], a.xyz[1], a.xyz[2],
-                    a.Uisoequiv, a_adp_type[i], a.occupancy  )
+            line = "  {0:-5s} {1:-3s} {2:11.6f} {3:11.6f} {4:11.6f} {5:11.6f} {6:-5s} {7:.4f}".format(a_site_label[i], a.symbol, a.xyz[0], a.xyz[1], a.xyz[2],
+        a.Uisoequiv, a_adp_type[i], a.occupancy)
             lines.append(line)
         # find anisotropic atoms
-        idx_aniso = [ i for i in range(len(stru)) if a_adp_type[i] != "Uiso" ]
+        idx_aniso = [i for i in range(len(stru)) if a_adp_type[i] != "Uiso"]
         if idx_aniso != []:
             lines.extend([
                 "loop_",
@@ -571,12 +572,11 @@ class P_cif(StructureParser):
                 "  _atom_site_aniso_U_33",
                 "  _atom_site_aniso_U_12",
                 "  _atom_site_aniso_U_13",
-                "  _atom_site_aniso_U_23" ])
+                "  _atom_site_aniso_U_23"])
             for i in idx_aniso:
                 a = stru[i]
-                line = "  %-5s %9.6f %9.6f %9.6f %9.6f %9.6f %9.6f" % (
-                        a_site_label[i], a.U[0,0], a.U[1,1], a.U[2,2],
-                        a.U[0,1], a.U[0,2], a.U[1,2] )
+                line = "  {0:-5s} {1:9.6f} {2:9.6f} {3:9.6f} {4:9.6f} {5:9.6f} {6:9.6f}".format(a_site_label[i], a.U[0, 0], a.U[1, 1], a.U[2, 2],
+                        a.U[0, 1], a.U[0, 2], a.U[1, 2])
                 lines.append(line)
         return lines
     # End of toLines
@@ -624,16 +624,16 @@ def getSymOp(s):
     Return instance of SymOp.
     """
     from ..SpaceGroups import SymOp
-    snoblanks = s.replace(' ','')
+    snoblanks = s.replace(' ', '')
     eqlist = snoblanks.split(',')
-    R = numpy.zeros((3,3), dtype=float)
+    R = numpy.zeros((3, 3), dtype=float)
     t = numpy.zeros(3, dtype=float)
     for i in (0, 1, 2):
         eqparts = re.split('([+-]?[xyz])', eqlist[i])
         for Rpart in eqparts[1::2]:
-            R[i,:] += symvec[Rpart]
+            R[i, :] += symvec[Rpart]
         for tpart in eqparts[::2]:
-            t[i] += eval('1.0*%s+0' % tpart)
+            t[i] += eval('1.0*{0!s}+0'.format(tpart))
     t -= numpy.floor(t)
     rv = SymOp(R, t)
     return rv

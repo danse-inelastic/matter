@@ -35,24 +35,24 @@ def getParser(format):
     Raises StructureFormatError exception when format is not defined.
     """
     if format not in parser_index:
-        emsg = "no parser for '%s' format" % format
+        emsg = "no parser for '{0!s}' format".format(format)
         raise StructureFormatError(emsg)
     pmod = parser_index[format]['module']
-    import_cmd = 'from . import %s as pm' % pmod
+    import_cmd = 'from . import {0!s} as pm'.format(pmod)
     exec(import_cmd)
     return pm.getParser()
 
 def inputFormats():
     """Return list of implemented input structure formats"""
-    input_formats = [ fmt for fmt, prop in parser_index.iteritems()
-            if prop['has_input'] ]
+    input_formats = [fmt for fmt, prop in parser_index.iteritems()
+            if prop['has_input']]
     input_formats.sort()
     return input_formats
 
 def outputFormats():
     """return list of implemented output structure formats"""
-    output_formats = [ fmt for fmt, prop in parser_index.iteritems()
-            if prop['has_output'] ]
+    output_formats = [fmt for fmt, prop in parser_index.iteritems()
+            if prop['has_output']]
     output_formats.sort()
     return output_formats
 

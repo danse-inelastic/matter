@@ -36,7 +36,7 @@ class P_auto(StructureParser):
         import os.path
         from . import inputFormats
         ofmts = [fmt for fmt in inputFormats() if fmt != 'auto']
-        if not self.filename:   return ofmts
+        if not self.filename: return ofmts
         # filename is defined here
         filebase = os.path.basename(self.filename)
         from fnmatch import fnmatch
@@ -67,8 +67,8 @@ class P_auto(StructureParser):
                 stru = p.parseLines(lines)
                 self.format = fmt
                 break
-            except StructureFormatError, err:
-                parsers_emsgs.append("%s: %s" % (fmt, err))
+            except StructureFormatError as err:
+                parsers_emsgs.append("{0!s}: {1!s}".format(fmt, err))
             except NotImplementedError:
                 pass
         if stru is None:

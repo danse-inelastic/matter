@@ -12,8 +12,7 @@
 #
 ##############################################################################
 
-"""Parser for Bruce Ravel's Atoms structure format
-"""
+"""Parser for Bruce Ravel's Atoms structure format"""
 
 __id__ = "$Id: P_bratoms.py 2825 2009-03-09 04:33:12Z juhas $"
 
@@ -39,10 +38,9 @@ class P_bratoms(StructureParser):
         return
 
     def parseLines(self, lines):
-        """Parse list of lines in atoms format.
+        """Parse list of lines in atoms format."""
 
-        Return Structure object or raise StructureFormatError.
-        """
+        """Return Structure object or raise StructureFormatError."""
 
         comlist = ["#", "%", "!", "*"]
         atoms = []
@@ -131,15 +129,15 @@ class P_bratoms(StructureParser):
                     if sline:
                         occ = float(sline.pop(0))
 
-                    a = Atom( atype = el,
-                        xyz = [x,y,z],
-                        label = tag,
-                        occupancy = occ)
+                    a = Atom(atype=el,
+                        xyz=[x, y, z],
+                        label=tag,
+                        occupancy=occ)
 
                     atoms.append(a)
 
-        except (ValueError, IndexError), e:
-            emsg = "%d: file is not in Atoms format" % ln
+        except (ValueError, IndexError) as e:
+            emsg = "{0!d}: file is not in Atoms format".format(ln)
             raise StructureFormatError(emsg)
 
         # Make sure we have atoms.
@@ -189,50 +187,47 @@ class P_bratoms(StructureParser):
         # title
         titles = stru.description.split("\n")
         for t in titles:
-            lines.append("title = %s" % t)
+            lines.append("title = {0!s}".format(t))
 
         # a, b, c
-        lines.append("a = %f    b = %f    c = %f" % (lat.a, lat.b, lat.c))
+        lines.append("a = {0!f}    b = {1!f}    c = {2!f}".format(lat.a, lat.b, lat.c))
         # alpha, beta, gamma
-        lines.append("alpha = %f    beta = %f    gamma = %f" % \
-                (lat.alpha, lat.beta, lat.gamma))
+        lines.append("alpha = {0!f}    beta = {1!f}    gamma = {2!f}".format(lat.alpha, lat.beta, lat.gamma))
 
         # space
-        lines.append("space = %s" % meta.get("space", "P 1"))
+        lines.append("space = {0!s}".format(meta.get("space", "P 1")))
 
         # edge
-        lines.append("edge = %s" % meta.get("edge", "K"))
+        lines.append("edge = {0!s}".format(meta.get("edge", "K")))
 
         # core
         tag = meta.get("core") or stru[0].name or stru[0].symbol
-        lines.append("core = %s" % tag)
+        lines.append("core = {0!s}".format(tag))
 
         # rmax
-        lines.append("rmax = %s" % meta.get("rmax", 6.0))
+        lines.append("rmax = {0!s}".format(meta.get("rmax", 6.0)))
 
         # Other keys
         if meta.get('shift'):
-            lines.append("shift = %s" % meta["shift"])
+            lines.append("shift = {0!s}".format(meta["shift"]))
         if meta.get('output'):
-            lines.append("output = %s" % meta["output"])
+            lines.append("output = {0!s}".format(meta["output"]))
         if meta.get('nitrogen'):
-            lines.append("nitrogen = %s" % meta["nitrogen"])
+            lines.append("nitrogen = {0!s}".format(meta["nitrogen"]))
         if meta.get('argon'):
-            lines.append("argon = %s" % meta["argon"])
+            lines.append("argon = {0!s}".format(meta["argon"]))
         if meta.get('krypton'):
-            lines.append("krypton = %s" % meta["krypton"])
+            lines.append("krypton = {0!s}".format(meta["krypton"]))
 
         # Add atoms
         lines.append("atoms")
-        lines.append("%-8s%-10s%-10s%-10s%-10s%s" %
-                ("!", "x", "y", "z", "tag", "occ"))
+        lines.append("{0:-8s}{1:-10s}{2:-10s}{3:-10s}{4:-10s}{5!s}".format("!", "x", "y", "z", "tag", "occ"))
         for a in stru:
             el = a.symbol#element.title()
             name = a.name or el
             x, y, z = a.xyz
             occ = a.occupancy
-            lines.append("%-7s %-9f %-9f %-9f %-9s %f" % \
-                    (el, x, y, z, name, occ))
+            lines.append("{0:-7s} {1:-9f} {2:-9f} {3:-9f} {4:-9s} {5!f}".format(el, x, y, z, name, occ))
 
         return lines
     # End of toLines
