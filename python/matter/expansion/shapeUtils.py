@@ -39,6 +39,8 @@ def findCenter(S):
 if __name__ == "__main__":
 
     import os.path
+    from . import makeEllipsoid
+    from .. import Structure
     datadir = "../../tests/testdata"
     S = Structure()
     S.read(os.path.join(datadir, "CdSe_bulk.stru"), "pdffit")
