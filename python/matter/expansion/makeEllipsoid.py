@@ -1,3 +1,5 @@
+from __future__ import division
+
 #!/usr/bin/env python
 ##############################################################################
 #
@@ -53,7 +55,7 @@ def makeEllipsoid(S, a, b=None, c=None):
     # Create a supercell large enough for the ellipsoid
     frac = S.lattice.fractional(sabc)
     mno = map(ceil, 2*frac)
-    mno = max(map(ceil, 2*frac))*array([1,1,1])
+    mno = max(map(ceil, 2*frac))*array([1, 1, 1])
     # Make the supercell
     from . import supercell
     newS = supercell(S, mno)
@@ -67,7 +69,7 @@ def makeEllipsoid(S, a, b=None, c=None):
     delList = []
     N = len(newS)
     j = N
-    for i in xrange(N):
+    for i in range(N):
         j -= 1
 
         # Calculate (x/a)**2 + (y/b)**2 + (z/c)**2

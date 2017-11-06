@@ -1,3 +1,5 @@
+from __future__ import print_function, division
+
 #!/usr/bin/env python
 
 """Unit tests for supercell.py
@@ -16,7 +18,7 @@ testdata_dir = os.path.join(tests_dir, 'testdata')
 
 from danse.ins.matter import Structure
 from danse.ins.matter.Lattice import Lattice
-from danse.ins.matter.Atom import  Atom
+from danse.ins.matter.Atom import Atom
 from danse.ins.matter.expansion import supercell
 
 
@@ -87,11 +89,11 @@ class TestSuperCell(unittest.TestCase):
         at2 = Atom('Al', [0.0, 0.5, 0.5])
         at3 = Atom('Al', [0.5, 0.0, 0.5])
         at4 = Atom('Al', [0.5, 0.5, 0.0])
-        self.stru4 = Structure( [ at1, at2, at3, at4], 
+        self.stru4 = Structure([at1, at2, at3, at4], 
                                lattice=Lattice(4.05, 4.05, 4.05, 90, 90, 90),
-                               sgid = 225 )
-        al_sup = supercell(self.stru4, (3,3,3))
-        #print al_sup
+                               sgid=225)
+        al_sup = supercell(self.stru4, (3, 3, 3))
+        #print(al_sup)
         return
 
     def test_naI_supercell(self):
@@ -105,15 +107,15 @@ class TestSuperCell(unittest.TestCase):
         at6 = Atom('I', [0.0, 0.0, 0.5])
         at7 = Atom('I', [0.0, 0.5, 0.0])
         at8 = Atom('I', [0.5, 0.0, 0.0])
-        naI = Structure( [ at1, at2, at3, at4, at5, at6, at7, at8], 
-                               lattice = Lattice(6.482, 6.482, 6.482, 90, 90, 90),
-                               sgid = 225 )
-        for sym,pos in zip(naI.symbols, naI.xyz_cartn):
-            print sym+' %f %f %f' % tuple(pos) 
-        print
-        naI_sup = supercell(naI, (2,2,2))
-        for sym,pos in zip(naI_sup.symbols, naI_sup.xyz_cartn):
-            print sym+' %f %f %f' % tuple(pos)
+        naI = Structure([at1, at2, at3, at4, at5, at6, at7, at8], 
+                               lattice=Lattice(6.482, 6.482, 6.482, 90, 90, 90),
+                               sgid=225)
+        for sym, pos in zip(naI.symbols, naI.xyz_cartn):
+            print(sym+' {0:f} {1:f} {2:f}'.format(tuple(pos))) 
+        print()
+        naI_sup = supercell(naI, (2, 2, 2))
+        for sym, pos in zip(naI_sup.symbols, naI_sup.xyz_cartn):
+            print(sym+' {0:f} {1:f} {2:f}'.format(tuple(pos)))
 
 # End of class TestRoutines
 

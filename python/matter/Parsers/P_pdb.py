@@ -1,3 +1,5 @@
+from __future__ import division
+
 ##############################################################################
 #
 # Structure         by DANSE Diffraction group
@@ -94,14 +96,14 @@ class P_pdb(StructureParser):
                     stru.lattice.setLatPar(a, b, c, alpha, beta, gamma)
                     scale = numpy.transpose(stru.lattice.recbase)
                 elif record == "SCALE1":
-                    sc = numpy.zeros((3,3), dtype=float)
-                    sc[0,:] = [float(x) for x in line[10:40].split()]
+                    sc = numpy.zeros((3, 3), dtype=float)
+                    sc[0, :] = [float(x) for x in line[10:40].split()]
                     scaleU[0] = float(line[45:55])
                 elif record == "SCALE2":
-                    sc[1,:] = [float(x) for x in line[10:40].split()]
+                    sc[1, :] = [float(x) for x in line[10:40].split()]
                     scaleU[1] = float(line[45:55])
                 elif record == "SCALE3":
-                    sc[2,:] = [float(x) for x in line[10:40].split()]
+                    sc[2, :] = [float(x) for x in line[10:40].split()]
                     scaleU[2] = float(line[45:55])
                     base = numpy.transpose(numpy.linalg.inv(sc))
                     abcABGcryst = numpy.array(stru.lattice.abcABG())
@@ -127,7 +129,7 @@ class P_pdb(StructureParser):
                         B = float(line[60:66])
                         U = numpy.identity(3)*B/(8*pi**2)
                     except ValueError:
-                        U = numpy.zeros((3,3), dtype=float)
+                        U = numpy.zeros((3, 3), dtype=float)
                     symbol = line[76:78].strip()
                     if symbol == "":
                         # get symbol from the first 2 characters of name
@@ -148,24 +150,24 @@ class P_pdb(StructureParser):
                         sigB = float(line[60:66])
                         sigU = numpy.identity(3)*sigB/(8*pi**2)
                     except ValueError:
-                        sigU = numpy.zeros((3,3), dtype=float)
+                        sigU = numpy.zeros((3, 3), dtype=float)
                     last_atom.sigxyz = sigxyz
                     last_atom.sigo = sigo
                     last_atom.sigU = sigU
                 elif record == "ANISOU":
-                    Uij = [ float(x)*1.0e-4 for x in line[28:70].split() ]
+                    Uij = [float(x)*1.0e-4 for x in line[28:70].split()]
                     for i in range(3):
-                        last_atom.U[i,i] = Uij[i]
-                    last_atom.U[0,1] = last_atom.U[1,0] = Uij[3]
-                    last_atom.U[0,2] = last_atom.U[2,0] = Uij[4]
-                    last_atom.U[1,2] = last_atom.U[2,1] = Uij[5]
+                        last_atom.U[i, i] = Uij[i]
+                    last_atom.U[0, 1] = last_atom.U[1, 0] = Uij[3]
+                    last_atom.U[0, 2] = last_atom.U[2, 0] = Uij[4]
+                    last_atom.U[1, 2] = last_atom.U[2, 1] = Uij[5]
                 elif record == "SIGUIJ":
-                    sigUij = [ float(x)*1.0e-4 for x in line[28:70].split() ]
+                    sigUij = [float(x)*1.0e-4 for x in line[28:70].split()]
                     for i in range(3):
-                        last_atom.sigU[i,i] = sigUij[i]
-                    last_atom.sigU[0,1] = last_atom.sigU[1,0] = sigUij[3]
-                    last_atom.sigU[0,2] = last_atom.sigU[2,0] = sigUij[4]
-                    last_atom.sigU[1,2] = last_atom.sigU[2,1] = sigUij[5]
+                        last_atom.sigU[i, i] = sigUij[i]
+                    last_atom.sigU[0, 1] = last_atom.sigU[1, 0] = sigUij[3]
+                    last_atom.sigU[0, 2] = last_atom.sigU[2, 0] = sigUij[4]
+                    last_atom.sigU[1, 2] = last_atom.sigU[2, 1] = sigUij[5]
                 elif record in P_pdb.validRecords:
                     pass
                 else:
@@ -174,7 +176,7 @@ class P_pdb(StructureParser):
         except (ValueError, IndexError):
             emsg = "%d: invalid PDB record" % p_nl
             exc_type, exc_value, exc_traceback = sys.exc_info()
-            raise StructureFormatError, emsg, exc_traceback
+            raise StructureFormatError(emsg, exc_traceback)
         return stru
     # End of parseLines
 
@@ -192,7 +194,7 @@ class P_pdb(StructureParser):
                 continuation = "  "
             else:
                 continuation = "%2i" % (len(lines)+1)
-            lines.append( "%-80s" % ("TITLE   "+continuation+title[0:stop]) )
+            lines.append("%-80s" % ("TITLE   "+continuation+title[0:stop]))
             title = title[stop:]
         return lines
     # End of titleLines
@@ -200,11 +202,11 @@ class P_pdb(StructureParser):
     def cryst1Lines(self, stru):
         """build lines corresponding to CRYST1 record"""
         lines = []
-        latpar = ( stru.lattice.a, stru.lattice.b, stru.lattice.c,
-                stru.lattice.alpha, stru.lattice.beta, stru.lattice.gamma )
+        latpar = (stru.lattice.a, stru.lattice.b, stru.lattice.c,
+                stru.lattice.alpha, stru.lattice.beta, stru.lattice.gamma)
         if latpar != (1.0, 1.0, 1.0, 90.0, 90.0, 90.0):
             line = "CRYST1%9.3f%9.3f%9.3f%7.2f%7.2f%7.2f" % latpar
-            lines.append( "%-80s" % line )
+            lines.append("%-80s" % line)
         return lines
     # End of cryst1Lines
 
@@ -237,24 +239,24 @@ class P_pdb(StructureParser):
                   "resName" : "",  "chainID" : " ",  "resSeq" : 1,
                   "iCode" : " ",  "x" : rc[0],  "y" : rc[1],  "z" : rc[2],
                   "occupancy" : a.occupancy,  "tempFactor" : B,  "segID" : "",
-                  "symbol" : a.symbol,  "charge" : "" }
+                  "symbol" : a.symbol,  "charge" : ""}
         lines.append(atomline)
-        isotropic = numpy.all(a.U == a.U[0,0]*numpy.identity(3))
+        isotropic = numpy.all(a.U == a.U[0, 0]*numpy.identity(3))
         if not isotropic:
-            mid = " %7i%7i%7i%7i%7i%7i  " % tuple( numpy.around(1e4 *
-                numpy.array([ a.U[0,0], a.U[1,1], a.U[2,2],
-                    a.U[0,1], a.U[0,2], a.U[1,2] ])) )
+            mid = " %7i%7i%7i%7i%7i%7i  " % tuple(numpy.around(1e4 *
+                numpy.array([a.U[0, 0], a.U[1, 1], a.U[2, 2],
+                    a.U[0, 1], a.U[0, 2], a.U[1, 2]])))
             line = "ANISOU" + atomline[6:27] + mid + atomline[72:80]
             lines.append(line)
         # default values of standard deviations
         d_sigxyz = numpy.zeros(3, dtype=float)
         d_sigo = 0.0
-        d_sigU = numpy.zeros((3,3), dtype=float)
+        d_sigU = numpy.zeros((3, 3), dtype=float)
         sigxyz = ad.get("sigxyz", d_sigxyz)
         sigo = [ad.get("sigo", d_sigo)]
         sigU = ad.get("sigU", d_sigU)
-        sigB = [8*pi**2*numpy.average( [sigU[i,i] for i in range(3)] )]
-        sigmas = numpy.concatenate( (sigxyz, sigo, sigB) )
+        sigB = [8*pi**2*numpy.average([sigU[i, i] for i in range(3)])]
+        sigmas = numpy.concatenate((sigxyz, sigo, sigB))
         # no need to print sigmas if they all round to zero
         hassigmas = \
             numpy.any(numpy.fabs(sigmas) >= numpy.array(3*[5e-4]+2*[5e-3])) \
@@ -264,10 +266,10 @@ class P_pdb(StructureParser):
             line = "SIGATM" + atomline[6:27] + mid + atomline[72:80]
             lines.append(line)
             # do we need SIGUIJ record?
-            if not numpy.all(sigU == sigU[0,0]*numpy.identity(3)):
-                mid = " %7i%7i%7i%7i%7i%7i  " % tuple( numpy.around(1e4 *
-                    numpy.array([ sigU[0,0], sigU[1,1], sigU[2,2],
-                        sigU[0,1], sigU[0,2], sigU[1,2] ])) )
+            if not numpy.all(sigU == sigU[0, 0]*numpy.identity(3)):
+                mid = " %7i%7i%7i%7i%7i%7i  " % tuple(numpy.around(1e4 *
+                    numpy.array([sigU[0, 0], sigU[1, 1], sigU[2, 2],
+                        sigU[0, 1], sigU[0, 2], sigU[1, 2]])))
                 line = "SIGUIJ" + atomline[6:27] + mid + atomline[72:80]
                 lines.append(line)
         return lines
@@ -279,10 +281,10 @@ class P_pdb(StructureParser):
         Return list of strings.
         """
         lines = []
-        lines.extend( self.titleLines(stru) )
-        lines.extend( self.cryst1Lines(stru) )
+        lines.extend(self.titleLines(stru))
+        lines.extend(self.cryst1Lines(stru))
         for idx in range(len(stru)):
-            lines.extend( self.atomLines(stru, idx) )
+            lines.extend(self.atomLines(stru, idx))
         line = (  "TER   " +            # 1-6
                   "%(serial)5i      " + # 7-11, 12-17
                   "%(resName)-3s " +    # 18-20, 21
@@ -292,7 +294,7 @@ class P_pdb(StructureParser):
                   "%(blank)53s"         # 28-80
                ) % {
                   "serial" : len(stru)+1,  "resName" : "",  "chainID" : " ",
-                  "resSeq" : 1, "iCode" : " ",  "blank" : " " }
+                  "resSeq" : 1, "iCode" : " ",  "blank" : " "}
         lines.append(line)
         lines.append("%-80s" % "END")
         return lines

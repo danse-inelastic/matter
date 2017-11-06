@@ -1,3 +1,5 @@
+from __future__ import print_function, division
+
 ##############################################################################
 #
 # See AUTHORS.txt for a list of people who contributed.
@@ -43,19 +45,19 @@ class TestLattice(unittest.TestCase):
         self.assertAlmostEqual(2.0, norm(base[1]), self.places)
         self.assertAlmostEqual(3.0, norm(base[2]), self.places)
         self.assertAlmostEqual(cosd(80.0),
-                dot(base[1],base[2])/(2*3), self.places)
+                dot(base[1], base[2])/(2*3), self.places)
         self.assertAlmostEqual(cosd(100.0),
-                dot(base[0],base[2])/(1*3), self.places)
+                dot(base[0], base[2])/(1*3), self.places)
         self.assertAlmostEqual(cosd(120.0),
-                dot(base[0],base[1])/(1*2), self.places)
+                dot(base[0], base[1])/(1*2), self.places)
 
     def test_setLatBase(self):
         """check calculation of unit cell rotation"""
         import numpy
         import numpy.linalg as numalg
-        base = numpy.array([[ 1.0,  1.0,  0.0],
-                          [ 0.0,  1.0,  1.0],
-                          [ 1.0,  0.0,  1.0]])
+        base = numpy.array([[1.0,  1.0,  0.0],
+                            [0.0,  1.0,  1.0],
+                            [1.0,  0.0,  1.0]])
         self.lattice.setLatBase(base)
         self.assertAlmostEqual(self.lattice.a, numpy.sqrt(2.0), self.places)
         self.assertAlmostEqual(self.lattice.b, numpy.sqrt(2.0), self.places)
@@ -75,9 +77,9 @@ class TestLattice(unittest.TestCase):
         self.assertListAlmostEqual(base[2], self.lattice.base[2])
         # try base checking
         self.assertRaises(LatticeError, self.lattice.setLatBase,
-                [[1, 0, 0], [1,0,0], [0,0,1]])
+                          [[1, 0, 0], [1, 0, 0], [0, 0, 1]])
         self.assertRaises(LatticeError, self.lattice.setLatBase,
-                [[1, 0, 0], [0,0,1], [0,1,0]])
+                          [[1, 0, 0], [0, 0, 1], [0, 1, 0]])
         return
 
     def test_repr(self):
@@ -88,18 +90,18 @@ class TestLattice(unittest.TestCase):
         r = repr(self.lattice)
         r0 = "Lattice(a=1, b=2, c=3, alpha=10, beta=20, gamma=30)"
         self.assertEqual(r, r0)
-        base = [[ 1.0,  1.0,  0.0],
-                [ 0.0,  2.0,  2.0],
-                [ 3.0,  0.0,  3.0]]
+        base = [[1.0,  1.0,  0.0],
+                [0.0,  2.0,  2.0],
+                [3.0,  0.0,  3.0]]
         self.lattice.setLatBase(base)
         r = repr(self.lattice)
-        self.assertEqual(r, "Lattice(base=%r)" % self.lattice.base)
+        self.assertEqual(r, "Lattice(base={0!r})".format(self.lattice.base))
         
     def test_monkhorst_pack(self):
         self.lattice.setLatPar(3, 3, 3, 90, 90, 90)
-        grid = (2,2,2)
-        print self.lattice.getMonkhorstPackGrid(grid)
-        print self.lattice.getFracMonkhorstPackGrid(grid)
+        grid = (2, 2, 2)
+        print(self.lattice.getMonkhorstPackGrid(grid))
+        print(self.lattice.getFracMonkhorstPackGrid(grid))
         
 
 
