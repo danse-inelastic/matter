@@ -1,19 +1,21 @@
+from __future__ import print_function
+
 import numpy as np
 import numpy.linalg as la
 from Atom import Atom
 from matter.crystalUtils.MonkhorstPack import MonkhorstPack
-
+from .. import Site
 
 
 class UnitCell:
     """Representation of a crystal unit cell."""
  
     
-    def __init__(self, name='UnitCell',lattice=None, spaceGroup=None):
+    def __init__(self, name='UnitCell', lattice=None, spaceGroup=None):
         #Component.__init__(self, name, facility='facility')
         #self.i=self.inventory
         if lattice is None:
-            lattice = np.array( [ map(float, self.i.a.split()),map(float, self.i.b.split()),map(float, self.i.c.split()) ] )
+            lattice = np.array([map(float, self.i.a.split()), map(float, self.i.b.split()), map(float, self.i.c.split())])
             #lattice = np.array( [ (1.0,0.0,0.0),(0.0,1.0,0.0),(0.0,0.0,1.0) ] )
 
         self._lattice = np.array(lattice)
@@ -23,7 +25,7 @@ class UnitCell:
         self._n = 0
         self._numAtoms = 0
         self._numSites = 0
-        self.base=self._lattice
+        self.base = self._lattice
         return
 
     def __iter__(self): return self._sites.__iter__()
@@ -31,11 +33,11 @@ class UnitCell:
     def __getitem__(self, i): return self._sites[i]
 
 #    def __str__(self):
-#        rt = "UnitCell a=%s, b=%s, c=%s\n" % tuple(self._lattice)
+#        rt = "UnitCell a={0!s}, b={1!s}, c={2!s}\n".format(tuple(self._lattice))
 #        for siteId in self._siteIds.keys():
-#            rt += "\n%s\n" % siteId
-#            rt += "\n position: %s\n" % (self._siteIds[siteId].getPosition()) 
-#            rt += "\n%s \n" % (self._siteIds[siteId].getAtom())
+#            rt += "\n{0!s}\n".format(siteId)
+#            rt += "\n position: {0!s}\n".format(self._siteIds[siteId].getPosition()) 
+#            rt += "\n{0!s} \n".format(self._siteIds[siteId].getAtom())
 #            continue
 #        return rt
     
@@ -48,7 +50,7 @@ class UnitCell:
         for siteId in self._siteIds.keys():
             newsite = Site(self._siteIds[siteId].getPosition(),
                            Atom(Z=self._siteIds[siteId].getAtom().Z))
-            new.addSite(newsite, siteId = siteId)
+            new.addSite(newsite, siteId=siteId)
         return new
 
 
@@ -56,38 +58,38 @@ class UnitCell:
         """Adds a site to the unit cell."""
         #assert ( isinstance(site, Site) )
 
-        if siteId.__class__ is not "string".__class__ :
-            raise ValueError, 'site Id should be a string!'
+        if siteId.__class__ is not "string".__class__:
+            raise ValueError('site Id should be a string!')
         pass
         
-        if siteId is None or siteId is "": siteId= "Id%s" % (self._uniqueID() )
+        if siteId is None or siteId is "": siteId = "Id{0!s}".format(self._uniqueID())
 
-        self._sites.append( site )
+        self._sites.append(site)
         self._siteIds[siteId] = self._sites[-1]
         self._numSites += 1
         if site.getAtom() is not None:
-            self._numAtoms +=1
+            self._numAtoms += 1
         return
 
     def addAtom(self, atom, position=None, siteId=None, cartesianPosition=None):
         """addAtom( Fe_atom,  np.array((0.25,0,0)) ) --> adds atom Fe_atom to UnitCell
         addAtom(Atom(Z=26), (0.25, 0, 0)) --> adds atom Fe_atom to UnitCell
         """
-        assert ( isinstance(atom, Atom) )
+        assert (isinstance(atom, Atom))
 
 #        if siteId.__class__ is not "string".__class__ :
-#            raise ValueError, 'site Id should be a string!'
+#            raise ValueError('site Id should be a string!')
 #        pass
         
-        if siteId is None or siteId is "": siteId= "Id%s" % (self._uniqueID() )
+        if siteId is None or siteId is "": siteId = "Id{0!s}".format(self._uniqueID())
 
         if cartesianPosition:
             vec = np.array(cartesianPosition)
             mat = np.linalg.inv(self._lattice)
-            position = np.dot(vec,mat).tolist()
+            position = np.dot(vec, mat).tolist()
 
         newSite = Site(position, atom)
-        self._sites.append( newSite )
+        self._sites.append(newSite)
         self._siteIds[siteId] = self._sites[-1]
         self._numAtoms += 1
         return
@@ -105,7 +107,7 @@ class UnitCell:
         denum = {}
         symbolmass = [(s.getAtom().symbol, s.getAtom().mass) for s in self._sites]
         for s in symbolmass:
-            if not denum.has_key(s):
+            if not (s in denum):
                 denum[s] = symbolmass.count(s)
         return denum
 
@@ -125,7 +127,7 @@ class UnitCell:
 
     def getProperties(self, siteId):
         """ Returns the properties of the atom at a site."""
-        return str( self._siteIds[siteId].getAtom() )
+        return str(self._siteIds[siteId].getAtom())
 
     def getPosition(self, siteId):
         """Returns the (fractional) position of a site."""
@@ -206,7 +208,7 @@ class UnitCell:
         recipUC = UnitCell(cellvectors=recipvectors)
         return recipUC
 
-    def computeDistances(self, maxdist=30, latticeRange=[2,2,2]):
+    def computeDistances(self, maxdist=30, latticeRange=[2, 2, 2]):
         """ unitcell.computeDistances(self, [nx,ny,nz]):
         builds up a Big multiple dictionary, namely
         self.distances[atom1][atom2][(DX,DY,DZ)]
@@ -220,15 +222,15 @@ class UnitCell:
             distances[idA] = {}
             for iB in range(0, len(idlist)):
                 idB = idlist[iB]
-                distances[idA][idB]={}
-                for tx in range(-latticeRange[0],latticeRange[0]+1):
-                    for ty in range(-latticeRange[1],latticeRange[1]+1):
-                        for tz in range(-latticeRange[2],latticeRange[2]+1):
+                distances[idA][idB] = {}
+                for tx in range(-latticeRange[0], latticeRange[0]+1):
+                    for ty in range(-latticeRange[1], latticeRange[1]+1):
+                        for tz in range(-latticeRange[2], latticeRange[2]+1):
                             posA = self.getCartesianPosition(idA)
-                            posB = self.getCartesianPosition(idB) + np.dot([tx,ty,tz], self._lattice)
-                            dist = np.sqrt(np.sum( (posB-posA) * (posB-posA) ))
-                            if(dist<maxdist):
-                                distances[idA][idB][(tx,ty,tz)] = dist
+                            posB = self.getCartesianPosition(idB) + np.dot([tx, ty, tz], self._lattice)
+                            dist = np.sqrt(np.sum((posB-posA) * (posB-posA)))
+                            if(dist < maxdist):
+                                distances[idA][idB][(tx, ty, tz)] = dist
         self._distances = distances
         return
 
@@ -247,11 +249,11 @@ class UnitCell:
 ##         # The function return the list of all these tetraedrons
         
 ##         if type(list4ids) is not type([]):
-##             raise ValueError, 'list4ids should be a list of 4 site Ids.'
+##             raise ValueError('list4ids should be a list of 4 site Ids.')
 ##         if len(list4ids) != len(latticeVectors):
-##             raise ValueError, 'There should be as many site Ids as lattice vectors.'
+##             raise ValueError('There should be as many site Ids as lattice vectors.')
 ##         if len(list4ids) != 4:
-##             raise ValueError, 'Need 4 sites to define a tetrahedron.'
+##             raise ValueError('Need 4 sites to define a tetrahedron.')
         
 ##         tetraVertices = [self.cartesianPositionInLattice(id,lattvec)
 ##                          for (id,lattvec) in zip(list4ids,latticeVectors)]
@@ -261,7 +263,7 @@ class UnitCell:
 ##         # check for non-degeneracy:
 ##         det = la.det(edgeVectors)
 ##         if(abs(det) < 1e-6):
-##             raise ValueError, 'determinant smaller than 1e-6: degenerate reference tetrahedron.'
+##             raise ValueError('determinant smaller than 1e-6: degenerate reference tetrahedron.')
         
     def bringFractionalPositionIntoCell(self, fracpos):
         """Brings a fractional position (x,y,z) 'into' the unit cell,
@@ -269,11 +271,11 @@ class UnitCell:
         pos = np.array(fracpos)
         assert (len(pos) == 3)
         for i in range(3):
-            if pos[i]<0:
-                while pos[i]<0:
+            if pos[i] < 0:
+                while pos[i] < 0:
                     pos[i] += 1
-            if pos[i]>=1:
-                while pos[i]>=1:
+            if pos[i] >= 1:
+                while pos[i] >= 1:
                     pos[i] -= 1
         return pos
 
@@ -287,7 +289,7 @@ class UnitCell:
         """
         try:
             posincell = self.getCartesianPosition(siteId)
-        except KeyError: raise KeyError, 'Invalid site Id'
+        except KeyError: raise KeyError('Invalid site Id')
         pos = np.array(posincell) + np.dot(latticeVector, self._lattice)
         return pos
 
@@ -295,11 +297,11 @@ class UnitCell:
 ##         """Helper function for findTetrahedra().
 ##         Taken from OpenPhonon. Requires that self._distances was computed."""
 ##         if type(list4ids) is not type([]):
-##             raise ValueError, 'list4ids should be a list of 4 site Ids.'
+##             raise ValueError('list4ids should be a list of 4 site Ids.')
 ##         if len(list4ids) != len(latticeVectors):
-##             raise ValueError, 'There should be as many site Ids as lattice vectors.'
+##             raise ValueError('There should be as many site Ids as lattice vectors.')
 ##         if len(list4ids) != 4:
-##             raise ValueError, 'Need 4 sites to define a tetrahedron.'
+##             raise ValueError('Need 4 sites to define a tetrahedron.')
 ##         constraintNames = list4ids
 ##         ids = list4ids
 ##         lattvecs = np.array(latticeVectors)
@@ -308,7 +310,7 @@ class UnitCell:
 ##         return (constraintNames,constraintTripod,constraintCircle)
 
 
-    def getMonkhorstPackGrid(self, size, shift=(0,0,0)):
+    def getMonkhorstPackGrid(self, size, shift=(0, 0, 0)):
         """Returns a Monkhorst-Pack grid of order size[0]*size[1]*size[2],
         scaled by the reciprocal space unit cell.
         The shift is an optional vector shift to all points in the grid."""
@@ -319,10 +321,10 @@ class UnitCell:
         # this applies scaling of MP grid by reciprocal cell vectors:
         # (equivalent of frac*vectors[0]+frac*vectors[1]+frac*vectors[2]
         kpts = frackpts*recipvectors.sum(0)
-        kpts.shape=(size[0], size[1], size[2], 3)
+        kpts.shape = (size[0], size[1], size[2], 3)
         return kpts
 
-    def getFracMonkhorstPackGrid(self, size, shift=(0,0,0)):
+    def getFracMonkhorstPackGrid(self, size, shift=(0, 0, 0)):
         """Returns a Monkhorst-Pack grid of order size[0]*size[1]*size[2],
         in fractional coordinates of the reciprocal space unit cell.
         The shift is an optional vector shift to all points in the grid."""
@@ -330,7 +332,7 @@ class UnitCell:
         recipvectors = 2 * np.pi * la.inv(np.transpose(self._lattice))
         frackpts = MonkhorstPack(size)
         frackpts += np.array(shift)
-        frackpts.shape=(size[0], size[1], size[2], 3)
+        frackpts.shape = (size[0], size[1], size[2], 3)
         return frackpts
 
 
@@ -338,11 +340,11 @@ class UnitCell:
 ##########################################################
 
 
-def create_unitcell( cellvectors, atomList, positionList):
+def create_unitcell(cellvectors, atomList, positionList):
     """Helper function to create a unit cell."""
-    rt = UnitCell( cellvectors = cellvectors )
-    for a, p in zip( atomList, positionList ):
-        site = Site(p,a)
+    rt = UnitCell(cellvectors=cellvectors)
+    for a, p in zip(atomList, positionList):
+        site = Site(p, a)
         rt.addSite(site, '')
     return rt
 
@@ -350,63 +352,63 @@ def create_unitcell( cellvectors, atomList, positionList):
 # Here are some tests:
 
 def uc_test1():
-    print "\n*** test1 ***"
-    uc = UnitCell( )
-    at1=Atom(symbol='Fe', mass=57) ; pos1=(0.0,0.0,0.0)
-    at2=Atom(symbol='Al') ; pos2=(0.5,0.5,0.5)
+    print("\n*** test1 ***")
+    uc = UnitCell()
+    at1 = Atom(symbol='Fe', mass=57); pos1 = (0.0, 0.0, 0.0)
+    at2 = Atom(symbol='Al'); pos2 = (0.5, 0.5, 0.5)
     
     site1 = Site(pos1, at1)
     site2 = Site(pos2, at2)
 
-    uc.addAtom( at1, pos1, "Fe1" )
-    uc.addAtom( at2, pos2, "Al1" )
+    uc.addAtom(at1, pos1, "Fe1")
+    uc.addAtom(at2, pos2, "Al1")
     for site in uc:
-       print "\n position %s \n %s" % (site.getPosition(), site.getAtom())
-       continue
+        print("\n position {0!s} \n {1!s}".format(site.getPosition(), site.getAtom()))
+        continue
     return
 
 
 def uc_test2():
-    print "\n*** test2 ***"
-    cellvectors = [ (1,0,0), (0,1,0), (0,0,1) ]
-    uc = create_unitcell( cellvectors, [Atom(symbol='Fe'), Atom(symbol='Al')], [ (0,0,0), (0.5,0.5,0.5) ] )
-    print uc
+    print("\n*** test2 ***")
+    cellvectors = [(1, 0, 0), (0, 1, 0), (0, 0, 1)]
+    uc = create_unitcell(cellvectors, [Atom(symbol='Fe'), Atom(symbol='Al')], [(0, 0, 0), (0.5, 0.5, 0.5)])
+    print(uc)
     return
 
 def uc_test3():
-    uc = UnitCell( )
+    uc = UnitCell()
 
     at1 = Atom(symbol='Fe', mass=57)
     at2 = Atom(symbol='Al')
     at3 = Atom(symbol="Zr")
 
-    site1 = Site((0,0,0), at1)
-    site2 = Site((0.5,0.5,0.5), at2)
+    site1 = Site((0, 0, 0), at1)
+    site2 = Site((0.5, 0.5, 0.5), at2)
     site3 = Site((0.5, 0.5, 0.0), at3)
     site4 = Site((0.5, 0.0, 0.5), at3)
     site5 = Site((0.0, 0.5, 0.5), at3)
     
-    uc.addSite(site1, "Fe1" )
-    uc.addSite(site2, "Al1" )
+    uc.addSite(site1, "Fe1")
+    uc.addSite(site2, "Al1")
     uc.addSite(site3, "")
     uc.addSite(site4, "")
     uc.addSite(site5, "")
 
-    print "\n Original unit cell with 3 equivalent Zr atoms:\n"
+    print("\n Original unit cell with 3 equivalent Zr atoms:\n")
 
     for key in uc._siteIds.keys():
-        print key, uc._siteIds[key]
+        print(key, uc._siteIds[key])
 
-    uc.getSiteFromId("Id0").getAtom().magneticMoment=1.2
+    uc.getSiteFromId("Id0").getAtom().magneticMoment = 1.2
 
-    print "\n Modified unit cell with changed Zr magnetic moment:\n"
+    print("\n Modified unit cell with changed Zr magnetic moment:\n")
 
     for key in uc._siteIds.keys():
-        print key, uc._siteIds[key]
+        print(key, uc._siteIds[key])
     return
     
 def uc_test4():
-    cellvectors = [ (1,0,0), (0,1,0), (0,0,1) ]
+    cellvectors = [(1, 0, 0), (0, 1, 0), (0, 0, 1)]
     uc = UnitCell(cellvectors=cellvectors)
     assert (uc.getCellVectors() == cellvectors).all()
     return
@@ -420,4 +422,3 @@ def test():
 
 
 if __name__ == "__main__": test()
-
