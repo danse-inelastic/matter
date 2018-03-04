@@ -26,9 +26,6 @@ from .Structure import Structure
 #    return Structure(**kwds)
     
     
-    
-
-
 
 # obtain version information
 from .version import __version__
